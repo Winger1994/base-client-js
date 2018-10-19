@@ -25,12 +25,21 @@ var Offer = /** @class */ (function () {
         this.compare = compare;
         this.rules = rules;
         this.offerPrices = offerPrices;
+        if (this.offerPrices.length == 0 && this.compare.size > 0) {
+            var key = Array.from(compare.keys())[0];
+            var val = compare.get(key) || "";
+            this.offerPrices = [
+                new OfferPrice_1.OfferPrice(0, "default", worth, [
+                    new OfferPriceRules_1.OfferPriceRules(0, key.toString(), val.toString(), rules[0])
+                ])
+            ];
+        }
     }
     Offer.fromJson = function (json) {
         var offer = Object.assign(new Offer(), json);
-        offer.tags = JsonUtils_1.JsonUtils.jsonToMap(json['tags']);
-        offer.compare = JsonUtils_1.JsonUtils.jsonToMap(json['compare']);
-        offer.rules = JsonUtils_1.JsonUtils.jsonToMap(json['rules']);
+        offer.tags = JsonUtils_1.JsonUtils.jsonToMap(json.tags);
+        offer.compare = JsonUtils_1.JsonUtils.jsonToMap(json.compare);
+        offer.rules = JsonUtils_1.JsonUtils.jsonToMap(json.rules);
         if (json.offerPrices && json.offerPrices.length) {
             offer.offerPrices = json.offerPrices.map(function (e) {
                 var offerRules = e.rules && e.rules.length
@@ -39,17 +48,28 @@ var Offer = /** @class */ (function () {
                 return new OfferPrice_1.OfferPrice(e.id, e.description, e.worth, offerRules);
             });
         }
+        else {
+            if (offer.compare.size > 0) {
+                var key = Array.from(offer.compare.keys())[0];
+                var val = offer.compare.get(key) || "";
+                offer.offerPrices = [
+                    new OfferPrice_1.OfferPrice(0, "default", offer.worth, [
+                        new OfferPriceRules_1.OfferPriceRules(0, key.toString(), val.toString(), offer.rules[0])
+                    ])
+                ];
+            }
+        }
         return offer;
     };
     Offer.prototype.toJson = function () {
         var jsonStr = JSON.stringify(this);
         var json = JSON.parse(jsonStr);
-        json['tags'] = JsonUtils_1.JsonUtils.mapToJson(this.tags);
-        json['compare'] = JsonUtils_1.JsonUtils.mapToJson(this.compare);
-        json['rules'] = JsonUtils_1.JsonUtils.mapToJson(this.rules);
-        for (var item in json['rules']) {
-            if (typeof json['rules'][item] == 'number') {
-                json['rules'][item] = CompareAction_1.CompareAction[json['rules'][item]].toString();
+        json.tags = JsonUtils_1.JsonUtils.mapToJson(this.tags);
+        json.compare = JsonUtils_1.JsonUtils.mapToJson(this.compare);
+        json.rules = JsonUtils_1.JsonUtils.mapToJson(this.rules);
+        for (var item in json.rules) {
+            if (typeof json.rules[item] === 'number') {
+                json.rules[item] = CompareAction_1.CompareAction[json.rules[item]].toString();
             }
         }
         json.offerPrices = this.offerPrices.map(function (e) {

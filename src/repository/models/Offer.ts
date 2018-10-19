@@ -19,9 +19,9 @@ export default class Offer {
     public static fromJson(json: any): Offer {
         const offer: Offer = Object.assign(new Offer(), json);
 
-        offer.tags = JsonUtils.jsonToMap(json['tags']);
-        offer.compare = JsonUtils.jsonToMap(json['compare']);
-        offer.rules = JsonUtils.jsonToMap(json['rules']);
+        offer.tags = JsonUtils.jsonToMap(json.tags);
+        offer.compare = JsonUtils.jsonToMap(json.compare);
+        offer.rules = JsonUtils.jsonToMap(json.rules);
 
         if (json.offerPrices && json.offerPrices.length) {
           offer.offerPrices = json.offerPrices.map( (e: OfferPrice) => {
@@ -30,6 +30,23 @@ export default class Offer {
                 : Array<OfferPriceRules>();
               return new OfferPrice(e.id, e.description, e.worth, offerRules);
           });
+        }
+        else
+        {
+            if (offer.compare.size>0)
+            {
+                let key: String = Array.from(offer.compare.keys())[0]
+                let val: String = offer.compare.get(key) || ""
+
+                offer.offerPrices = [
+                    
+                    new OfferPrice(
+                        0, "default", offer.worth, [
+                            new OfferPriceRules(0, key.toString(), val.toString(), offer.rules[0])
+                        ]
+                    )
+                ]
+            }
         }
         return offer;
     }
@@ -52,17 +69,32 @@ export default class Offer {
         this.compare = compare;
         this.rules = rules;
         this.offerPrices = offerPrices;
+
+        if (this.offerPrices.length==0 && this.compare.size>0)
+        {
+            let key: String = Array.from(compare.keys())[0]
+            let val: String = compare.get(key) || ""
+
+            this.offerPrices = [
+                
+                new OfferPrice(
+                    0, "default", worth, [
+                        new OfferPriceRules(0, key.toString(), val.toString(), rules[0])
+                    ]
+                )
+            ]
+        }
     }
 
     public toJson(): any {
         const jsonStr = JSON.stringify(this);
         const json = JSON.parse(jsonStr);
-        json['tags'] = JsonUtils.mapToJson(this.tags);
-        json['compare'] = JsonUtils.mapToJson(this.compare);
-        json['rules'] = JsonUtils.mapToJson(this.rules);
-        for (let item in json['rules']) {
-            if (typeof json['rules'][item] == 'number') {
-                json['rules'][item] = CompareAction[json['rules'][item]].toString();
+        json.tags = JsonUtils.mapToJson(this.tags);
+        json.compare = JsonUtils.mapToJson(this.compare);
+        json.rules = JsonUtils.mapToJson(this.rules);
+        for (let item in json.rules) {
+            if (typeof json.rules[item] === 'number') {
+                json.rules[item] = CompareAction[json.rules[item]].toString();
             }
         }
         json.offerPrices = this.offerPrices.map(e =>
