@@ -36,27 +36,40 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
         const profileManager: ProfileManager = this.profileManager;
         const dataRequestManager: DataRequestManager = this.dataRequestManager;
         return this.dataRequestManager.requestPermissions(this.serviceFinderId, [serviceType])
-            .then(function (ret: number) {
-                if (ret > 0) {
-                    return dataRequestManager.getRequests(account.publicKey, serviceFinderId)
-                        .then(function (requests: Array<DataRequest>) {
-                            if (requests.length > 0) {
-                                const request: DataRequest = requests[requests.length - 1];
-                                return profileManager.getAuthorizedData(request.toPk, request.responseData)
-                                    .then((map: Map<string, string>) => map.get(serviceType))
-                                    .then((json: string) => JSON.parse(json))
-                            } else {
-                                return new Array<string>();
-                            }
-                        })
-                } else {
-                    return new Array<string>();
-                }
+            .then(function (requestId: number) {
+                return dataRequestManager.getRequests(account.publicKey, serviceFinderId)
+                    .then(function (requests: Array<DataRequest>) {
+                        if (requests.length > 0) {
+                            const request: DataRequest = requests[requests.length - 1];
+                            return profileManager.getAuthorizedData(request.toPk, request.responseData)
+                                .then((map: Map<string, string>) => map.get(serviceType))
+                                .then((json: string) => JSON.parse(json))
+                        } else {
+                            return null;
+                        }
+                    })
             });
     }
 
     public getServiceInfo(spid: string): Promise<ServiceInfo> {
-
+        const keyServiceInfo: string = this.KEY_SERVICE_INFO;
+        const account: Account = this.account;
+        const profileManager: ProfileManager = this.profileManager;
+        const dataRequestManager: DataRequestManager = this.dataRequestManager;
+        return this.dataRequestManager.requestPermissions(spid, [this.KEY_SERVICE_INFO])
+            .then(function (requestId: number) {
+                return dataRequestManager.getRequests(account.publicKey, spid)
+                    .then(function (requests: Array<DataRequest>) {
+                        if (requests.length > 0) {
+                            const request: DataRequest = requests[requests.length - 1];
+                            return profileManager.getAuthorizedData(request.toPk, request.responseData)
+                                .then((map: Map<string, string>) => map.get(keyServiceInfo))
+                                .then((json: string) => JSON.parse(json))
+                        } else {
+                            return null;
+                        }
+                    })
+            });
     }
 
     public subscribe(serviceInfo: ServiceInfo): Promise<boolean> {
