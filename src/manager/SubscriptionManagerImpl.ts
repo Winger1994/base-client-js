@@ -38,8 +38,7 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
         return this.dataRequestManager.requestPermissions(this.serviceFinderId, [serviceType])
             .then(function (ret: number) {
                 if (ret > 0) {
-                    const requests: Promise<Array<DataRequest>> = dataRequestManager.getRequests(account.publicKey, serviceFinderId);
-                    return requests
+                    return dataRequestManager.getRequests(account.publicKey, serviceFinderId)
                         .then(function (requests: Array<DataRequest>) {
                             if (requests.length > 0) {
                                 const request: DataRequest = requests[requests.length - 1];
