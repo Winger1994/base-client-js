@@ -51,6 +51,8 @@ import OfferSearch, { OfferResultAction } from './repository/models/OfferSearch'
 import  OfferShareData  from './repository/models/OfferShareData';
 import { OfferShareDataRepository } from './repository/offer/OfferShareDataRepository';
 import OfferShareDataRepositoryImpl from './repository/offer/OfferShareDataRepositoryImpl';
+import { SubscriptionManager } from './manager/SubscriptionManager';
+import { SubscriptionManagerImpl } from './manager/SubscriptionManagerImpl';
 
 export { RepositoryStrategyType } from './repository/RepositoryStrategyType';
 export { CompareAction } from './repository/models/CompareAction';
@@ -111,8 +113,10 @@ export default class Base {
     private _dataRequestManager: DataRequestManager;
     private _offerManager: OfferManager;
     private _searchManager: SearchManager;
+    private _subscriptionManager: SubscriptionManager;
     private _authAccountBehavior: BehaviorSubject<Account> = new BehaviorSubject<Account>(new Account());
     private _repositoryStrategyInterceptor: RepositoryStrategyInterceptor;
+    
 
     constructor(nodeHost: string,
                 siteOrigin: string,
@@ -182,6 +186,11 @@ export default class Base {
             messageSigner,
             this._authAccountBehavior.asObservable()
         );
+
+        this._subscriptionManager = new SubscriptionManagerImpl(
+            this.profileManager,
+            this.dataRequestManager,
+            this._authAccountBehavior.asObservable());
     }
 
     changeStrategy(strategy: RepositoryStrategyType) {
@@ -210,6 +219,10 @@ export default class Base {
 
     get searchManager(): SearchManager {
         return this._searchManager;
+    }
+
+    get subscriptionManager(): SubscriptionManager {
+        return this._subscriptionManager;
     }
 
     private createNodeAssistant(httpTransport: HttpTransport): AssistantNodeRepository {

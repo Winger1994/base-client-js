@@ -1,28 +1,30 @@
 import { Observable } from 'rxjs/Rx';
 import Account from '../repository/models/Account';
 import { Service, ServiceInfo } from '../repository/service/Service';
+import { ServiceImpl } from '../repository/service/ServiceImpl';
 import { SubscriptionManager } from './SubscriptionManager';
 import { ProfileManager } from './ProfileManager';
 import { DataRequestManager } from './DataRequestManager';
-import DataRequest from 'src/repository/models/DataRequest';
+import DataRequest from '../repository/models/DataRequest';
+import { AccessRight } from '../utils/keypair/Permissions';
+import Type from '../repository/service/Type';
+import Pointer from '../repository/service/Pointer';
 
 export class SubscriptionManagerImpl implements SubscriptionManager {
 
-    public KEY_SERVICE_INFO: string = "service";
-    public KEY_SUBSCRIPTION: string = "subscription";
+    public static KEY_SERVICE_INFO: string = "service";
+    public static KEY_SUBSCRIPTION: string = "subscription";
 
-    private serviceFinderId: string;
+    private nameServiceId: string;
     private account: Account = new Account();
     private profileManager: ProfileManager;
     private dataRequestManager: DataRequestManager;
 
     constructor(
-        serviceFinderId: string,
         profileManager: ProfileManager,
         dataRequestManager: DataRequestManager,
         authAccountBehavior: Observable<Account>) {
-
-        this.serviceFinderId = serviceFinderId;
+        this.nameServiceId = '';
         this.profileManager = profileManager;
         this.dataRequestManager = dataRequestManager;
 
@@ -30,50 +32,191 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
             .subscribe(this.onChangeAccount.bind(this));
     }
 
+    /**
+     * 
+     * @param id public id of the service provider that provides the
+     * name service.
+     */
+    // TODO: need a better way to set up name service's id
+    public setNameServiceId(id: string): void {
+        this.nameServiceId = id;
+    }
+
+    /**
+     * Query the name service to look up a list of service providers
+     * that have the given types.
+     * @param serviceType 
+     */
     public getServiceProviders(serviceType: string): Promise<Array<string>> {
-        const account: Account = this.account;
-        const serviceFinderId: string = this.serviceFinderId;
-        const profileManager: ProfileManager = this.profileManager;
-        const dataRequestManager: DataRequestManager = this.dataRequestManager;
-        return this.dataRequestManager.requestPermissions(this.serviceFinderId, [serviceType])
-            .then(function (ret: number) {
-                if (ret > 0) {
-                    const requests: Promise<Array<DataRequest>> = dataRequestManager.getRequests(account.publicKey, serviceFinderId);
-                    return requests
-                        .then(function (requests: Array<DataRequest>) {
-                            if (requests.length > 0) {
-                                const request: DataRequest = requests[requests.length - 1];
-                                return profileManager.getAuthorizedData(request.toPk, request.responseData)
-                                    .then((map: Map<string, string>) => map.get(serviceType))
-                                    .then((json: string) => JSON.parse(json))
-                            } else {
-                                return new Array<string>();
+        if(this.nameServiceId.length == 0){
+            return new Promise<Array<string>>((resolve, reject) => {
+                resolve(new Array());
+            });
+        }
+        // TODO: Since we are using global service type, have a check of the serviceType here.
+        return this.dataRequestManager.requestPermissions(this.nameServiceId, [serviceType]).then(() => {
+            return new Promise<Array<string>>((resolve, reject) => {
+                let timer = setInterval(async () => {
+                    const res: Map<string, string> = await this.checkRequestStatus(this.account.publicKey, this.nameServiceId, serviceType);
+                    if(res.size > 0){
+                        const data: any = res.get(serviceType);
+                        const types: Type = JSON.parse(data);
+                        resolve(types.spids);
+                        clearTimeout(timer);
+                    }
+                }, 10000);
+            });
+        });
+    }
+
+    /**
+     * Retrieve the service info of the given service provider.
+     * @param spid 
+     */
+    public getServiceInfo(spid: string): Promise<ServiceInfo> {
+        return this.dataRequestManager.requestPermissions(spid, [SubscriptionManagerImpl.KEY_SERVICE_INFO]).then((number)=>{
+            // Pool the request status
+            return new Promise<ServiceInfo>((resolve, reject) => {
+                let timer = setInterval(async() => {
+                    const res: Map<string, string> = await this.checkRequestStatus(this.account.publicKey, spid, SubscriptionManagerImpl.KEY_SERVICE_INFO);
+                    if(res.size > 0){
+                        const data: any = res.get(SubscriptionManagerImpl.KEY_SERVICE_INFO);
+                        const serviceInfo: ServiceInfo = JSON.parse(data);
+                        resolve(serviceInfo);
+                        clearTimeout(timer);
+                    }
+                }, 10000);
+            });
+        })
+    }
+    
+    /**
+     * Private helper function to check whether the data request is fulfilled
+     * @param from 
+     * @param to 
+     * @param key 
+     */
+    private async checkRequestStatus(from: string, to: string, key: string): Promise<Map<string, string>> {
+        let result: Map<string, string> = new Map();
+        const dataRequests: Array<DataRequest> = await this.dataRequestManager.getRequests(from, to);
+        // Check if the requested data entry with the given key has been granted.
+        for(let i=0;i<dataRequests.length;++i){
+            const request: DataRequest = dataRequests[i];
+            // If this request has been granted
+            if(request.responseData.length == 0) continue;
+            const data: Map<string, string> = await this.profileManager.getAuthorizedData(request.toPk, request.responseData);
+            if(data.has(key)){
+                const entry: any = data.get(key);
+                result.set(key, entry);
+                break;
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * Subscribe to the given service provider
+     * @param serviceInfo 
+     */
+    public subscribe(serviceInfo: ServiceInfo): Promise<boolean> {
+        // Send subscription request to service provider by grant all
+        // the required data entries
+        return this.profileManager.getData().then((data) => {
+            return new Promise<boolean>((resolve, reject) => {
+                const grantFields: Map<string, AccessRight> = new Map();
+                for(let i=0;i<serviceInfo.requiredKeys.length;++i){
+                    const key: string = serviceInfo.requiredKeys[i];
+                    if(!data.has(key)){
+                        return resolve(false);
+                    }
+                    grantFields.set(key, AccessRight.R);
+                }
+                this.dataRequestManager.grantAccessForClient(serviceInfo.id, grantFields).then(() => {
+                    return resolve(true);
+                })
+            });
+        }).then((valid) => {
+            return new Promise<boolean>((resolve, reject) => {
+                if(!valid){
+                    return resolve(false);
+                }else{
+                    let timer = setInterval(async () => {
+                        const res: Map<string, string> = await this.checkRequestStatus(this.account.publicKey, serviceInfo.id, this.account.publicKey);
+                        if(res.size > 0){
+                            // Get subscription status
+                            const data: any = res.get(this.account.publicKey);
+                            if(data === ServiceImpl.SUBSCRIPTION_DENY){
+                                resolve(false);
+                                clearTimeout(timer);
+                            }else{
+                                // Add a pointer into own storage
+                                const updates: Map<string, string> = new Map();
+                                // Add service provider pointer into own storage
+                                updates.set(serviceInfo.type, JSON.stringify(new Pointer(serviceInfo.id, serviceInfo.type)));
+                                await this.profileManager.updateData(updates);
+                                resolve(true);
+                                clearTimeout(timer);
                             }
-                        })
-                } else {
-                    return new Array<string>();
+                        }
+                    }, 10000);
                 }
             });
+        });
     }
 
-    public getServiceInfo(spid: string): Promise<ServiceInfo> {
+    /**
+     * Announce the service. If an id of the name service is provided, then
+     * the service will be added to that name service.
+     * @param service 
+     */
+    public announceService(service: Service): Promise<boolean> {
+        // Add a "service" entry into the storage
+        const update: Map<string, string> = new Map();
+        update.set(SubscriptionManagerImpl.KEY_SERVICE_INFO, service.toJsonString());
+        return this.profileManager.updateData(update).then(() => {
+            return new Promise<boolean>((resolve, reject) => {
+                // Register it with the name service if presents
+                if(this.nameServiceId.length > 0){
+                    this.getServiceInfo(this.nameServiceId).then((serviceInfo) => {
+                        this.subscribe(serviceInfo).then((res) => {
+                            resolve(res);
+                        })
+                    });
+                }else{
+                    resolve(true);
+                }
+            })
+
+        })
 
     }
 
-    public subscribe(serviceInfo: ServiceInfo): Promise<boolean> {
-
-    }
-
-    public announceService(service: Service) {
-
-    }
-
+    /**
+     * Get the latest data from the service provider
+     * @param spid 
+     */
     public getProcessedData(spid: string): Promise<string> {
-
+        // Check the data entry pointer shared back by this service provider
+        return this.dataRequestManager.getRequests(this.account.publicKey, spid).then((dataRequests) => {
+            return this.checkRequestStatus(this.account.publicKey, spid, this.account.publicKey);
+        }).then((data) => {
+            return new Promise<string>((resolve, reject) => {
+                if(data.size > 0){
+                    resolve(data.get(this.account.publicKey));
+                }else{
+                    resolve("");
+                }
+            });
+        });
     }
 
-    public getSubscriptions(): Map<string, ServiceInfo> {
-
+    
+    public getSubscriptions(): Promise<Map<string, ServiceInfo>> {
+        //TODO: The only way to implement this function at the current design
+        // seems like to be scan a list of service types of the clients?
+        return new Promise<Map<string, ServiceInfo>>((resolve, reject) => {
+            resolve(new Map());
+        })
     }
 
     private onChangeAccount(account: Account) {
