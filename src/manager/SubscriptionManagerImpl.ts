@@ -88,6 +88,7 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
                 }, 10000);
             });
         })
+
     }
     
     /**
@@ -210,7 +211,7 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
         });
     }
 
-    
+
     public getSubscriptions(): Promise<Map<string, ServiceInfo>> {
         //TODO: The only way to implement this function at the current design
         // seems like to be scan a list of service types of the clients?
