@@ -44,6 +44,7 @@ var OfferShareData_1 = require("./repository/models/OfferShareData");
 exports.OfferShareData = OfferShareData_1.default;
 var OfferShareDataRepositoryImpl_1 = require("./repository/offer/OfferShareDataRepositoryImpl");
 exports.OfferShareDataRepositoryImpl = OfferShareDataRepositoryImpl_1.default;
+var SubscriptionManagerImpl_1 = require("./manager/SubscriptionManagerImpl");
 var RepositoryStrategyType_2 = require("./repository/RepositoryStrategyType");
 exports.RepositoryStrategyType = RepositoryStrategyType_2.RepositoryStrategyType;
 var CompareAction_1 = require("./repository/models/CompareAction");
@@ -108,6 +109,7 @@ var Base = /** @class */ (function () {
         this._offerManager = new OfferManagerImpl_1.OfferManagerImpl(offerRepository, this._authAccountBehavior.asObservable());
         this._searchManager = new SearchManagerImpl_1.SearchManagerImpl(searchRequestRepository, offerSearchRepository, this._authAccountBehavior.asObservable());
         this._walletManager = new WalletManagerImpl_1.WalletManagerImpl(this.profileManager, this.dataRequestManager, new BaseSchema_1.BaseSchema(), messageSigner, this._authAccountBehavior.asObservable());
+        this._subscriptionManager = new SubscriptionManagerImpl_1.SubscriptionManagerImpl(this.profileManager, this.dataRequestManager, this._authAccountBehavior.asObservable());
     }
     Base.prototype.changeStrategy = function (strategy) {
         this._repositoryStrategyInterceptor.changeStrategy(strategy);
@@ -150,6 +152,13 @@ var Base = /** @class */ (function () {
     Object.defineProperty(Base.prototype, "searchManager", {
         get: function () {
             return this._searchManager;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Base.prototype, "subscriptionManager", {
+        get: function () {
+            return this._subscriptionManager;
         },
         enumerable: true,
         configurable: true

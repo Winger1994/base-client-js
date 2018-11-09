@@ -1990,7 +1990,7 @@ exports.errorObject = { e: {} };
 ;(function (root, factory, undef) {
 	if (true) {
 		// CommonJS
-		module.exports = exports = factory(__webpack_require__(4), __webpack_require__(25));
+		module.exports = exports = factory(__webpack_require__(4), __webpack_require__(26));
 	}
 	else if (typeof define === "function" && define.amd) {
 		// AMD
@@ -6441,7 +6441,7 @@ exports.RpcToken = RpcToken;
 "use strict";
 
 
-var assert = __webpack_require__(26);
+var assert = __webpack_require__(27);
 var inherits = __webpack_require__(31);
 
 exports.inherits = inherits;
@@ -6976,6 +6976,28 @@ exports.EmptyObservable = EmptyObservable;
 /* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Permissions = /** @class */ (function () {
+    function Permissions(fields) {
+        if (fields === void 0) { fields = new Map(); }
+        this.fields = fields;
+    }
+    return Permissions;
+}());
+exports.Permissions = Permissions;
+var AccessRight;
+(function (AccessRight) {
+    AccessRight[AccessRight["R"] = 0] = "R";
+    AccessRight[AccessRight["RW"] = 1] = "RW";
+})(AccessRight = exports.AccessRight || (exports.AccessRight = {}));
+
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
 /* eslint-disable node/no-deprecated-api */
 var buffer = __webpack_require__(222)
 var Buffer = buffer.Buffer
@@ -7041,7 +7063,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7106,7 +7128,7 @@ exports.MulticastOperator = MulticastOperator;
 //# sourceMappingURL=multicast.js.map
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 ;(function (root, factory, undef) {
@@ -7243,7 +7265,7 @@ exports.MulticastOperator = MulticastOperator;
 }));
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 module.exports = assert;
@@ -7260,7 +7282,7 @@ assert.equal = function assertEqual(l, r, msg) {
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7534,7 +7556,7 @@ function unescapeJsonPointer(str) {
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 ;(function (root, factory) {
@@ -7674,7 +7696,7 @@ function unescapeJsonPointer(str) {
 }));
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 ;(function (root, factory) {
@@ -7945,28 +7967,6 @@ function unescapeJsonPointer(str) {
 	return CryptoJS.MD5;
 
 }));
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-var Permissions = /** @class */ (function () {
-    function Permissions(fields) {
-        if (fields === void 0) { fields = new Map(); }
-        this.fields = fields;
-    }
-    return Permissions;
-}());
-exports.Permissions = Permissions;
-var AccessRight;
-(function (AccessRight) {
-    AccessRight[AccessRight["R"] = 0] = "R";
-    AccessRight[AccessRight["RW"] = 1] = "RW";
-})(AccessRight = exports.AccessRight || (exports.AccessRight = {}));
-
 
 /***/ }),
 /* 31 */
@@ -8883,7 +8883,7 @@ exports.reduce = reduce;
 
 
 var utils = __webpack_require__(18);
-var assert = __webpack_require__(26);
+var assert = __webpack_require__(27);
 
 function BlockHash() {
   this.pending = null;
@@ -12144,7 +12144,7 @@ var CompareAction;
 
 var URI = __webpack_require__(547)
   , equal = __webpack_require__(80)
-  , util = __webpack_require__(27)
+  , util = __webpack_require__(28)
   , SchemaObject = __webpack_require__(201)
   , traverse = __webpack_require__(549);
 
@@ -18451,7 +18451,7 @@ function plucker(props, length) {
 "use strict";
 
 var Subject_1 = __webpack_require__(7);
-var multicast_1 = __webpack_require__(24);
+var multicast_1 = __webpack_require__(25);
 /* tslint:enable:max-line-length */
 /**
  * Returns a ConnectableObservable, which is a variety of Observable that waits until its connect method is called
@@ -18481,7 +18481,7 @@ exports.publish = publish;
 "use strict";
 
 var BehaviorSubject_1 = __webpack_require__(147);
-var multicast_1 = __webpack_require__(24);
+var multicast_1 = __webpack_require__(25);
 /**
  * @param value
  * @return {ConnectableObservable<T>}
@@ -18556,7 +18556,7 @@ exports.BehaviorSubject = BehaviorSubject;
 "use strict";
 
 var ReplaySubject_1 = __webpack_require__(54);
-var multicast_1 = __webpack_require__(24);
+var multicast_1 = __webpack_require__(25);
 /* tslint:enable:max-line-length */
 function publishReplay(bufferSize, windowTime, selectorOrScheduler, scheduler) {
     if (selectorOrScheduler && typeof selectorOrScheduler !== 'function') {
@@ -18576,7 +18576,7 @@ exports.publishReplay = publishReplay;
 "use strict";
 
 var AsyncSubject_1 = __webpack_require__(47);
-var multicast_1 = __webpack_require__(24);
+var multicast_1 = __webpack_require__(25);
 function publishLast() {
     return function (source) { return multicast_1.multicast(new AsyncSubject_1.AsyncSubject())(source); };
 }
@@ -19354,7 +19354,7 @@ var SequenceEqualCompareToSubscriber = (function (_super) {
 
 "use strict";
 
-var multicast_1 = __webpack_require__(24);
+var multicast_1 = __webpack_require__(25);
 var refCount_1 = __webpack_require__(74);
 var Subject_1 = __webpack_require__(7);
 function shareSubjectFactory() {
@@ -23055,7 +23055,7 @@ exports.BaseSchema = BaseSchema;
 "use strict";
 
 
-var util = __webpack_require__(27);
+var util = __webpack_require__(28);
 
 module.exports = SchemaObject;
 
@@ -23785,7 +23785,7 @@ module.exports = function generate__limitItems(it, $keyword, $ruleType) {
       if ($keyword == 'maxItems') {
         out += 'more';
       } else {
-        out += 'less';
+        out += 'fewer';
       }
       out += ' than ';
       if ($isData) {
@@ -23956,7 +23956,7 @@ module.exports = function generate__limitProperties(it, $keyword, $ruleType) {
       if ($keyword == 'maxProperties') {
         out += 'more';
       } else {
-        out += 'less';
+        out += 'fewer';
       }
       out += ' than ';
       if ($isData) {
@@ -24737,7 +24737,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var BaseTypes_1 = __webpack_require__(86);
 var Account_1 = __webpack_require__(19);
 var WalletUtils_1 = __webpack_require__(218);
-var Permissions_1 = __webpack_require__(30);
+var Permissions_1 = __webpack_require__(23);
 var WalletManagerImpl = /** @class */ (function () {
     function WalletManagerImpl(profileManager, dataRequestManager, baseSchema, messageSigner, authAccountBehavior) {
         this.account = new Account_1.default();
@@ -25043,7 +25043,7 @@ var assert = __webpack_require__(233);
 var rlp = __webpack_require__(665);
 var BN = __webpack_require__(12);
 var createHash = __webpack_require__(227);
-var Buffer = __webpack_require__(23).Buffer;
+var Buffer = __webpack_require__(24).Buffer;
 Object.assign(exports, __webpack_require__(666));
 
 /**
@@ -26136,7 +26136,7 @@ exports.g1_256 = g1_256;
 var utils = __webpack_require__(18);
 var common = __webpack_require__(42);
 var shaCommon = __webpack_require__(230);
-var assert = __webpack_require__(26);
+var assert = __webpack_require__(27);
 
 var sum32 = utils.sum32;
 var sum32_4 = utils.sum32_4;
@@ -26247,7 +26247,7 @@ SHA256.prototype._digest = function digest(enc) {
 
 var utils = __webpack_require__(18);
 var common = __webpack_require__(42);
-var assert = __webpack_require__(26);
+var assert = __webpack_require__(27);
 
 var rotr64_hi = utils.rotr64_hi;
 var rotr64_lo = utils.rotr64_lo;
@@ -26672,6 +26672,7 @@ var OfferShareData_1 = __webpack_require__(77);
 exports.OfferShareData = OfferShareData_1.default;
 var OfferShareDataRepositoryImpl_1 = __webpack_require__(671);
 exports.OfferShareDataRepositoryImpl = OfferShareDataRepositoryImpl_1.default;
+var SubscriptionManagerImpl_1 = __webpack_require__(672);
 var RepositoryStrategyType_2 = __webpack_require__(191);
 exports.RepositoryStrategyType = RepositoryStrategyType_2.RepositoryStrategyType;
 var CompareAction_1 = __webpack_require__(78);
@@ -26690,14 +26691,14 @@ var EthereumUtils_1 = __webpack_require__(219);
 exports.EthereumUtils = EthereumUtils_1.EthereumUtils;
 var KeyPair_1 = __webpack_require__(85);
 exports.KeyPair = KeyPair_1.KeyPair;
-var Permissions_1 = __webpack_require__(30);
+var Permissions_1 = __webpack_require__(23);
 exports.Permissions = Permissions_1.Permissions;
 exports.AccessRight = Permissions_1.AccessRight;
 var AcceptedField_1 = __webpack_require__(212);
 exports.AcceptedField = AcceptedField_1.AcceptedField;
 var RpcToken_1 = __webpack_require__(17);
 exports.RpcToken = RpcToken_1.RpcToken;
-var RpcAuth_1 = __webpack_require__(672);
+var RpcAuth_1 = __webpack_require__(675);
 exports.RpcAuth = RpcAuth_1.RpcAuth;
 var BaseTypes_1 = __webpack_require__(86);
 exports.BaseAddrPair = BaseTypes_1.BaseAddrPair;
@@ -26736,6 +26737,7 @@ var Base = /** @class */ (function () {
         this._offerManager = new OfferManagerImpl_1.OfferManagerImpl(offerRepository, this._authAccountBehavior.asObservable());
         this._searchManager = new SearchManagerImpl_1.SearchManagerImpl(searchRequestRepository, offerSearchRepository, this._authAccountBehavior.asObservable());
         this._walletManager = new WalletManagerImpl_1.WalletManagerImpl(this.profileManager, this.dataRequestManager, new BaseSchema_1.BaseSchema(), messageSigner, this._authAccountBehavior.asObservable());
+        this._subscriptionManager = new SubscriptionManagerImpl_1.SubscriptionManagerImpl(this.profileManager, this.dataRequestManager, this._authAccountBehavior.asObservable());
     }
     Base.prototype.changeStrategy = function (strategy) {
         this._repositoryStrategyInterceptor.changeStrategy(strategy);
@@ -26778,6 +26780,13 @@ var Base = /** @class */ (function () {
     Object.defineProperty(Base.prototype, "searchManager", {
         get: function () {
             return this._searchManager;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Base.prototype, "subscriptionManager", {
+        get: function () {
+            return this._subscriptionManager;
         },
         enumerable: true,
         configurable: true
@@ -33941,7 +33950,7 @@ Observable_1.Observable.prototype.multicast = multicast_1.multicast;
 
 "use strict";
 
-var multicast_1 = __webpack_require__(24);
+var multicast_1 = __webpack_require__(25);
 /* tslint:enable:max-line-length */
 /**
  * Allows source Observable to be subscribed only once with a Subject of choice,
@@ -37724,7 +37733,7 @@ var mergeScan_1 = __webpack_require__(139);
 exports.mergeScan = mergeScan_1.mergeScan;
 var min_1 = __webpack_require__(140);
 exports.min = min_1.min;
-var multicast_1 = __webpack_require__(24);
+var multicast_1 = __webpack_require__(25);
 exports.multicast = multicast_1.multicast;
 var observeOn_1 = __webpack_require__(49);
 exports.observeOn = observeOn_1.observeOn;
@@ -38176,7 +38185,7 @@ var compileSchema = __webpack_require__(546)
   , formats = __webpack_require__(551)
   , rules = __webpack_require__(552)
   , $dataMetaSchema = __webpack_require__(573)
-  , util = __webpack_require__(27);
+  , util = __webpack_require__(28);
 
 module.exports = Ajv;
 
@@ -38679,7 +38688,7 @@ function noop() {}
 
 
 var resolve = __webpack_require__(79)
-  , util = __webpack_require__(27)
+  , util = __webpack_require__(28)
   , errorClasses = __webpack_require__(81)
   , stableStringify = __webpack_require__(202);
 
@@ -40615,7 +40624,7 @@ Cache.prototype.clear = function Cache_clear() {
 "use strict";
 
 
-var util = __webpack_require__(27);
+var util = __webpack_require__(28);
 
 var DATE = /^(\d\d\d\d)-(\d\d)-(\d\d)$/;
 var DAYS = [0,31,28,31,30,31,30,31,31,30,31,30,31];
@@ -40772,7 +40781,7 @@ function regex(str) {
 
 
 var ruleModules = __webpack_require__(553)
-  , toHash = __webpack_require__(27).toHash;
+  , toHash = __webpack_require__(28).toHash;
 
 module.exports = function rules() {
   var RULES = [
@@ -42655,6 +42664,7 @@ module.exports = function generate_propertyNames(it, $keyword, $ruleType) {
   var $closingBraces = '';
   $it.level++;
   var $nextValid = 'valid' + $it.level;
+  out += 'var ' + ($errs) + ' = errors;';
   if (it.util.schemaHasRules($schema, it.RULES.all)) {
     $it.schema = $schema;
     $it.schemaPath = $schemaPath;
@@ -42668,7 +42678,6 @@ module.exports = function generate_propertyNames(it, $keyword, $ruleType) {
       $dataProperties = 'dataProperties' + $lvl,
       $ownProperties = it.opts.ownProperties,
       $currentBaseId = it.baseId;
-    out += ' var ' + ($errs) + ' = errors; ';
     if ($ownProperties) {
       out += ' var ' + ($dataProperties) + ' = undefined; ';
     }
@@ -43883,7 +43892,7 @@ var __read = (this && this.__read) || function (o, n) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var CryptoUtils_1 = __webpack_require__(82);
 var KeyPair_1 = __webpack_require__(85);
-var Permissions_1 = __webpack_require__(30);
+var Permissions_1 = __webpack_require__(23);
 var JsonUtils_1 = __webpack_require__(20);
 var AcceptedField_1 = __webpack_require__(212);
 var bitcore = __webpack_require__(213);
@@ -44175,7 +44184,7 @@ exports.BitKeyPair = BitKeyPair;
 ;(function (root, factory, undef) {
 	if (true) {
 		// CommonJS
-		module.exports = exports = factory(__webpack_require__(4), __webpack_require__(58), __webpack_require__(585), __webpack_require__(586), __webpack_require__(28), __webpack_require__(29), __webpack_require__(83), __webpack_require__(210), __webpack_require__(587), __webpack_require__(211), __webpack_require__(588), __webpack_require__(589), __webpack_require__(590), __webpack_require__(84), __webpack_require__(591), __webpack_require__(25), __webpack_require__(9), __webpack_require__(592), __webpack_require__(593), __webpack_require__(594), __webpack_require__(595), __webpack_require__(596), __webpack_require__(597), __webpack_require__(598), __webpack_require__(599), __webpack_require__(600), __webpack_require__(601), __webpack_require__(602), __webpack_require__(603), __webpack_require__(604), __webpack_require__(605), __webpack_require__(606), __webpack_require__(607));
+		module.exports = exports = factory(__webpack_require__(4), __webpack_require__(58), __webpack_require__(585), __webpack_require__(586), __webpack_require__(29), __webpack_require__(30), __webpack_require__(83), __webpack_require__(210), __webpack_require__(587), __webpack_require__(211), __webpack_require__(588), __webpack_require__(589), __webpack_require__(590), __webpack_require__(84), __webpack_require__(591), __webpack_require__(26), __webpack_require__(9), __webpack_require__(592), __webpack_require__(593), __webpack_require__(594), __webpack_require__(595), __webpack_require__(596), __webpack_require__(597), __webpack_require__(598), __webpack_require__(599), __webpack_require__(600), __webpack_require__(601), __webpack_require__(602), __webpack_require__(603), __webpack_require__(604), __webpack_require__(605), __webpack_require__(606), __webpack_require__(607));
 	}
 	else if (typeof define === "function" && define.amd) {
 		// AMD
@@ -46031,7 +46040,7 @@ exports.BitKeyPair = BitKeyPair;
 ;(function (root, factory, undef) {
 	if (true) {
 		// CommonJS
-		module.exports = exports = factory(__webpack_require__(4), __webpack_require__(28), __webpack_require__(29), __webpack_require__(25), __webpack_require__(9));
+		module.exports = exports = factory(__webpack_require__(4), __webpack_require__(29), __webpack_require__(30), __webpack_require__(26), __webpack_require__(9));
 	}
 	else if (typeof define === "function" && define.amd) {
 		// AMD
@@ -46268,7 +46277,7 @@ exports.BitKeyPair = BitKeyPair;
 ;(function (root, factory, undef) {
 	if (true) {
 		// CommonJS
-		module.exports = exports = factory(__webpack_require__(4), __webpack_require__(28), __webpack_require__(29), __webpack_require__(25), __webpack_require__(9));
+		module.exports = exports = factory(__webpack_require__(4), __webpack_require__(29), __webpack_require__(30), __webpack_require__(26), __webpack_require__(9));
 	}
 	else if (typeof define === "function" && define.amd) {
 		// AMD
@@ -47043,7 +47052,7 @@ exports.BitKeyPair = BitKeyPair;
 ;(function (root, factory, undef) {
 	if (true) {
 		// CommonJS
-		module.exports = exports = factory(__webpack_require__(4), __webpack_require__(28), __webpack_require__(29), __webpack_require__(25), __webpack_require__(9));
+		module.exports = exports = factory(__webpack_require__(4), __webpack_require__(29), __webpack_require__(30), __webpack_require__(26), __webpack_require__(9));
 	}
 	else if (typeof define === "function" && define.amd) {
 		// AMD
@@ -47187,7 +47196,7 @@ exports.BitKeyPair = BitKeyPair;
 ;(function (root, factory, undef) {
 	if (true) {
 		// CommonJS
-		module.exports = exports = factory(__webpack_require__(4), __webpack_require__(28), __webpack_require__(29), __webpack_require__(25), __webpack_require__(9));
+		module.exports = exports = factory(__webpack_require__(4), __webpack_require__(29), __webpack_require__(30), __webpack_require__(26), __webpack_require__(9));
 	}
 	else if (typeof define === "function" && define.amd) {
 		// AMD
@@ -47384,7 +47393,7 @@ exports.BitKeyPair = BitKeyPair;
 ;(function (root, factory, undef) {
 	if (true) {
 		// CommonJS
-		module.exports = exports = factory(__webpack_require__(4), __webpack_require__(28), __webpack_require__(29), __webpack_require__(25), __webpack_require__(9));
+		module.exports = exports = factory(__webpack_require__(4), __webpack_require__(29), __webpack_require__(30), __webpack_require__(26), __webpack_require__(9));
 	}
 	else if (typeof define === "function" && define.amd) {
 		// AMD
@@ -47596,7 +47605,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var RpcAccessData_1 = __webpack_require__(610);
-var Permissions_1 = __webpack_require__(30);
+var Permissions_1 = __webpack_require__(23);
 var ClientData = /** @class */ (function (_super) {
     __extends(ClientData, _super);
     function ClientData(publicKey, accessToken, origin, expireDate, permissions) {
@@ -47631,7 +47640,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Permissions_1 = __webpack_require__(30);
+var Permissions_1 = __webpack_require__(23);
 var RpcToken_1 = __webpack_require__(17);
 var AccessData = /** @class */ (function (_super) {
     __extends(AccessData, _super);
@@ -48056,7 +48065,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var JsonUtils_1 = __webpack_require__(20);
-var Permissions_1 = __webpack_require__(30);
+var Permissions_1 = __webpack_require__(23);
 var DataRequestManagerImpl = /** @class */ (function () {
     function DataRequestManagerImpl(dataRequestRepository, authAccountBehavior, encrypt, decrypt) {
         this.dataRequestRepository = dataRequestRepository;
@@ -48693,7 +48702,7 @@ module.exports = __webpack_require__(221)(__webpack_require__(224)('keccak'))
 
 "use strict";
 
-var Buffer = __webpack_require__(23).Buffer
+var Buffer = __webpack_require__(24).Buffer
 var Transform = __webpack_require__(223).Transform
 var inherits = __webpack_require__(31)
 
@@ -48790,7 +48799,7 @@ module.exports = require("util");
 
 "use strict";
 
-var Buffer = __webpack_require__(23).Buffer
+var Buffer = __webpack_require__(24).Buffer
 var Transform = __webpack_require__(223).Transform
 var inherits = __webpack_require__(31)
 
@@ -48887,7 +48896,7 @@ module.exports = __webpack_require__(221)(__webpack_require__(632))
 
 "use strict";
 
-var Buffer = __webpack_require__(23).Buffer
+var Buffer = __webpack_require__(24).Buffer
 var keccakState = __webpack_require__(633)
 
 function Keccak () {
@@ -49496,7 +49505,7 @@ exports.isNumberInInterval = function (number, x, y, message) {
 
 "use strict";
 
-var Buffer = __webpack_require__(23).Buffer
+var Buffer = __webpack_require__(24).Buffer
 var bip66 = __webpack_require__(640)
 
 var EC_PRIVKEY_EXPORT_DER_COMPRESSED = Buffer.from([
@@ -49698,7 +49707,7 @@ exports.signatureImportLax = function (sig) {
 // Format: 0x30 [total-length] 0x02 [R-length] [R] 0x02 [S-length] [S]
 // NOTE: SIGHASH byte ignored AND restricted, truncate before use
 
-var Buffer = __webpack_require__(23).Buffer
+var Buffer = __webpack_require__(24).Buffer
 
 function check (buffer) {
   if (buffer.length < 8) return false
@@ -49815,7 +49824,7 @@ module.exports = {
 
 "use strict";
 
-var Buffer = __webpack_require__(23).Buffer
+var Buffer = __webpack_require__(24).Buffer
 var createHash = __webpack_require__(227)
 var BN = __webpack_require__(12)
 var EC = __webpack_require__(13).ec
@@ -50108,7 +50117,7 @@ module.exports = function(module) {
 /* 643 */
 /***/ (function(module, exports) {
 
-module.exports = {"_from":"elliptic@=6.4.0","_id":"elliptic@6.4.0","_inBundle":false,"_integrity":"sha1-ysmvh2LIWDYYcAPI3+GT5eLq5d8=","_location":"/elliptic","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"elliptic@=6.4.0","name":"elliptic","escapedName":"elliptic","rawSpec":"=6.4.0","saveSpec":null,"fetchSpec":"=6.4.0"},"_requiredBy":["/bitcore-lib","/browserify-sign","/create-ecdh","/secp256k1"],"_resolved":"https://registry.npmjs.org/elliptic/-/elliptic-6.4.0.tgz","_shasum":"cac9af8762c85836187003c8dfe193e5e2eae5df","_spec":"elliptic@=6.4.0","_where":"/Users/mark/bitclave/repo/base-client-js/node_modules/bitcore-lib","author":{"name":"Fedor Indutny","email":"fedor@indutny.com"},"bugs":{"url":"https://github.com/indutny/elliptic/issues"},"bundleDependencies":false,"dependencies":{"bn.js":"^4.4.0","brorand":"^1.0.1","hash.js":"^1.0.0","hmac-drbg":"^1.0.0","inherits":"^2.0.1","minimalistic-assert":"^1.0.0","minimalistic-crypto-utils":"^1.0.0"},"deprecated":false,"description":"EC cryptography","devDependencies":{"brfs":"^1.4.3","coveralls":"^2.11.3","grunt":"^0.4.5","grunt-browserify":"^5.0.0","grunt-cli":"^1.2.0","grunt-contrib-connect":"^1.0.0","grunt-contrib-copy":"^1.0.0","grunt-contrib-uglify":"^1.0.1","grunt-mocha-istanbul":"^3.0.1","grunt-saucelabs":"^8.6.2","istanbul":"^0.4.2","jscs":"^2.9.0","jshint":"^2.6.0","mocha":"^2.1.0"},"files":["lib"],"homepage":"https://github.com/indutny/elliptic","keywords":["EC","Elliptic","curve","Cryptography"],"license":"MIT","main":"lib/elliptic.js","name":"elliptic","repository":{"type":"git","url":"git+ssh://git@github.com/indutny/elliptic.git"},"scripts":{"jscs":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","jshint":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","lint":"npm run jscs && npm run jshint","test":"npm run lint && npm run unit","unit":"istanbul test _mocha --reporter=spec test/index.js","version":"grunt dist && git add dist/"},"version":"6.4.0"}
+module.exports = {"_from":"elliptic@=6.4.0","_id":"elliptic@6.4.0","_inBundle":false,"_integrity":"sha1-ysmvh2LIWDYYcAPI3+GT5eLq5d8=","_location":"/elliptic","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"elliptic@=6.4.0","name":"elliptic","escapedName":"elliptic","rawSpec":"=6.4.0","saveSpec":null,"fetchSpec":"=6.4.0"},"_requiredBy":["/bitcore-lib","/browserify-sign","/create-ecdh","/secp256k1"],"_resolved":"https://registry.npmjs.org/elliptic/-/elliptic-6.4.0.tgz","_shasum":"cac9af8762c85836187003c8dfe193e5e2eae5df","_spec":"elliptic@=6.4.0","_where":"/Users/yuleili/Documents/Master_2018_Fall/Practicum/Bitclave/Protocol/base-client-js/node_modules/bitcore-lib","author":{"name":"Fedor Indutny","email":"fedor@indutny.com"},"bugs":{"url":"https://github.com/indutny/elliptic/issues"},"bundleDependencies":false,"dependencies":{"bn.js":"^4.4.0","brorand":"^1.0.1","hash.js":"^1.0.0","hmac-drbg":"^1.0.0","inherits":"^2.0.1","minimalistic-assert":"^1.0.0","minimalistic-crypto-utils":"^1.0.0"},"deprecated":false,"description":"EC cryptography","devDependencies":{"brfs":"^1.4.3","coveralls":"^2.11.3","grunt":"^0.4.5","grunt-browserify":"^5.0.0","grunt-cli":"^1.2.0","grunt-contrib-connect":"^1.0.0","grunt-contrib-copy":"^1.0.0","grunt-contrib-uglify":"^1.0.1","grunt-mocha-istanbul":"^3.0.1","grunt-saucelabs":"^8.6.2","istanbul":"^0.4.2","jscs":"^2.9.0","jshint":"^2.6.0","mocha":"^2.1.0"},"files":["lib"],"homepage":"https://github.com/indutny/elliptic","keywords":["EC","Elliptic","curve","Cryptography"],"license":"MIT","main":"lib/elliptic.js","name":"elliptic","repository":{"type":"git","url":"git+ssh://git@github.com/indutny/elliptic.git"},"scripts":{"jscs":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","jshint":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","lint":"npm run jscs && npm run jshint","test":"npm run lint && npm run unit","unit":"istanbul test _mocha --reporter=spec test/index.js","version":"grunt dist && git add dist/"},"version":"6.4.0"}
 
 /***/ }),
 /* 644 */
@@ -50119,7 +50128,7 @@ module.exports = {"_from":"elliptic@=6.4.0","_id":"elliptic@6.4.0","_inBundle":f
 
 var utils = exports;
 var BN = __webpack_require__(12);
-var minAssert = __webpack_require__(26);
+var minAssert = __webpack_require__(27);
 var minUtils = __webpack_require__(229);
 
 utils.assert = minAssert;
@@ -52809,7 +52818,7 @@ var sh = [
 
 
 var utils = __webpack_require__(18);
-var assert = __webpack_require__(26);
+var assert = __webpack_require__(27);
 
 function Hmac(hash, key, enc) {
   if (!(this instanceof Hmac))
@@ -53897,7 +53906,7 @@ EC.prototype.getKeyRecoveryParam = function(e, signature, Q, enc) {
 
 var hash = __webpack_require__(87);
 var utils = __webpack_require__(229);
-var assert = __webpack_require__(26);
+var assert = __webpack_require__(27);
 
 function HmacDRBG(options) {
   if (!(this instanceof HmacDRBG))
@@ -54582,7 +54591,7 @@ module.exports = Signature;
 /***/ (function(module, exports, __webpack_require__) {
 
 const assert = __webpack_require__(233)
-const Buffer = __webpack_require__(23).Buffer
+const Buffer = __webpack_require__(24).Buffer
 /**
  * RLP Encoding based on: https://github.com/ethereum/wiki/wiki/%5BEnglish%5D-RLP
  * This function takes in a data, convert it to buffer if not, and a length for recursion
@@ -55881,6 +55890,449 @@ exports.default = OfferShareDataRepositoryImpl;
 
 /***/ }),
 /* 672 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var Account_1 = __webpack_require__(19);
+var ServiceImpl_1 = __webpack_require__(673);
+var Permissions_1 = __webpack_require__(23);
+var Pointer_1 = __webpack_require__(674);
+var SubscriptionManagerImpl = /** @class */ (function () {
+    function SubscriptionManagerImpl(profileManager, dataRequestManager, authAccountBehavior) {
+        this.account = new Account_1.default();
+        this.nameServiceId = '';
+        this.profileManager = profileManager;
+        this.dataRequestManager = dataRequestManager;
+        authAccountBehavior
+            .subscribe(this.onChangeAccount.bind(this));
+    }
+    /**
+     *
+     * @param id public id of the service provider that provides the
+     * name service.
+     */
+    // TODO: need a better way to set up name service's id
+    SubscriptionManagerImpl.prototype.setNameServiceId = function (id) {
+        this.nameServiceId = id;
+    };
+    /**
+     * Query the name service to look up a list of service providers
+     * that have the given types.
+     * @param serviceType
+     */
+    SubscriptionManagerImpl.prototype.getServiceProviders = function (serviceType) {
+        var _this = this;
+        if (this.nameServiceId.length === 0) {
+            return new Promise(function (resolve, reject) {
+                resolve(new Array());
+            });
+        }
+        // TODO: Since we are using global service type, have a check of the serviceType here.
+        return this.dataRequestManager.requestPermissions(this.nameServiceId, [serviceType]).then(function () {
+            return new Promise(function (resolve, reject) {
+                var timer = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
+                    var res, data, types;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, this.checkRequestStatus(this.account.publicKey, this.nameServiceId, serviceType)];
+                            case 1:
+                                res = _a.sent();
+                                data = res.get(serviceType);
+                                if (data !== undefined) {
+                                    types = JSON.parse(data);
+                                    resolve(types.spids);
+                                    clearTimeout(timer);
+                                }
+                                return [2 /*return*/];
+                        }
+                    });
+                }); }, 10000);
+            });
+        });
+    };
+    /**
+     * Retrieve the service info of the given service provider.
+     * @param spid
+     */
+    SubscriptionManagerImpl.prototype.getServiceInfo = function (spid) {
+        var _this = this;
+        return this.dataRequestManager.requestPermissions(spid, [SubscriptionManagerImpl.KEY_SERVICE_INFO]).then(function () {
+            // Pool the request status
+            return new Promise(function (resolve, reject) {
+                var timer = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
+                    var res, data, serviceInfo;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, this.checkRequestStatus(this.account.publicKey, spid, SubscriptionManagerImpl.KEY_SERVICE_INFO)];
+                            case 1:
+                                res = _a.sent();
+                                data = res.get(SubscriptionManagerImpl.KEY_SERVICE_INFO);
+                                if (data !== undefined) {
+                                    serviceInfo = JSON.parse(data);
+                                    resolve(serviceInfo);
+                                    clearTimeout(timer);
+                                }
+                                return [2 /*return*/];
+                        }
+                    });
+                }); }, 10000);
+            });
+        });
+    };
+    /**
+     * Subscribe to the given service provider
+     * @param serviceInfo
+     */
+    SubscriptionManagerImpl.prototype.subscribe = function (serviceInfo) {
+        var _this = this;
+        // Send subscription request to service provider by grant all
+        // the required data entries
+        return this.profileManager.getData().then(function (data) {
+            return new Promise(function (resolve, reject) {
+                var grantFields = new Map();
+                for (var i = 0; i < serviceInfo.requiredKeys.length; ++i) {
+                    var key = serviceInfo.requiredKeys[i];
+                    if (!data.has(key)) {
+                        return resolve(false);
+                    }
+                    grantFields.set(key, Permissions_1.AccessRight.R);
+                }
+                _this.dataRequestManager.grantAccessForClient(serviceInfo.id, grantFields).then(function () {
+                    return resolve(true);
+                });
+            });
+        }).then(function (valid) {
+            return new Promise(function (resolve, reject) {
+                if (!valid) {
+                    return resolve(false);
+                }
+                else {
+                    var timer_1 = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
+                        var res, data, updates;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, this.checkRequestStatus(this.account.publicKey, serviceInfo.id, this.account.publicKey)];
+                                case 1:
+                                    res = _a.sent();
+                                    data = res.get(this.account.publicKey);
+                                    if (!(data !== undefined)) return [3 /*break*/, 4];
+                                    if (!(data === ServiceImpl_1.ServiceImpl.SUBSCRIPTION_DENY)) return [3 /*break*/, 2];
+                                    resolve(false);
+                                    clearTimeout(timer_1);
+                                    return [3 /*break*/, 4];
+                                case 2:
+                                    updates = new Map();
+                                    // Add service provider pointer into own storage
+                                    updates.set(serviceInfo.type, JSON.stringify(new Pointer_1.default(serviceInfo.id, serviceInfo.type)));
+                                    return [4 /*yield*/, this.profileManager.updateData(updates)];
+                                case 3:
+                                    _a.sent();
+                                    resolve(true);
+                                    clearTimeout(timer_1);
+                                    _a.label = 4;
+                                case 4: return [2 /*return*/];
+                            }
+                        });
+                    }); }, 10000);
+                }
+            });
+        });
+    };
+    /**
+     * Announce the service. If an id of the name service is provided, then
+     * the service will be added to that name service.
+     * @param service
+     */
+    SubscriptionManagerImpl.prototype.announceService = function (service) {
+        var _this = this;
+        // Add a "service" entry into the storage
+        var update = new Map();
+        update.set(SubscriptionManagerImpl.KEY_SERVICE_INFO, service.toJsonString());
+        return this.profileManager.updateData(update).then(function () {
+            return new Promise(function (resolve, reject) {
+                // Register it with the name service if presents
+                if (_this.nameServiceId.length > 0) {
+                    _this.getServiceInfo(_this.nameServiceId).then(function (serviceInfo) {
+                        _this.subscribe(serviceInfo).then(function (res) {
+                            resolve(res);
+                        });
+                    });
+                }
+                else {
+                    resolve(true);
+                }
+            });
+        });
+    };
+    /**
+     * Get the latest data from the service provider
+     * @param spid
+     */
+    SubscriptionManagerImpl.prototype.getProcessedData = function (spid) {
+        var _this = this;
+        // Check the data entry pointer shared back by this service provider
+        return this.dataRequestManager.getRequests(this.account.publicKey, spid).then(function (dataRequests) {
+            return _this.checkRequestStatus(_this.account.publicKey, spid, _this.account.publicKey);
+        }).then(function (data) {
+            return new Promise(function (resolve, reject) {
+                if (data.size > 0) {
+                    resolve(data.get(_this.account.publicKey));
+                }
+                else {
+                    resolve('');
+                }
+            });
+        });
+    };
+    SubscriptionManagerImpl.prototype.getSubscriptions = function () {
+        // TODO: The only way to implement this function at the current design
+        // seems like to be scan a list of service types of the clients?
+        return new Promise(function (resolve, reject) {
+            resolve(new Map());
+        });
+    };
+    /**
+     * Private helper function to check whether the data request is fulfilled
+     * @param from
+     * @param to
+     * @param key
+     */
+    SubscriptionManagerImpl.prototype.checkRequestStatus = function (from, to, key) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result, dataRequests, i, request, data, entry;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        result = new Map();
+                        return [4 /*yield*/, this.dataRequestManager.getRequests(from, to)];
+                    case 1:
+                        dataRequests = _a.sent();
+                        i = 0;
+                        _a.label = 2;
+                    case 2:
+                        if (!(i < dataRequests.length)) return [3 /*break*/, 5];
+                        request = dataRequests[i];
+                        // If this request has been granted
+                        if (request.responseData.length === 0) {
+                            return [3 /*break*/, 4];
+                        }
+                        return [4 /*yield*/, this.profileManager.getAuthorizedData(request.toPk, request.responseData)];
+                    case 3:
+                        data = _a.sent();
+                        entry = data.get(key);
+                        if (entry !== undefined) {
+                            result.set(key, entry);
+                            return [3 /*break*/, 5];
+                        }
+                        _a.label = 4;
+                    case 4:
+                        ++i;
+                        return [3 /*break*/, 2];
+                    case 5: return [2 /*return*/, result];
+                }
+            });
+        });
+    };
+    SubscriptionManagerImpl.prototype.onChangeAccount = function (account) {
+        this.account = account;
+    };
+    SubscriptionManagerImpl.KEY_SERVICE_INFO = 'service';
+    SubscriptionManagerImpl.KEY_SUBSCRIPTION = 'subscription';
+    return SubscriptionManagerImpl;
+}());
+exports.SubscriptionManagerImpl = SubscriptionManagerImpl;
+
+
+/***/ }),
+/* 673 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var Permissions_1 = __webpack_require__(23);
+var ServiceImpl = /** @class */ (function () {
+    function ServiceImpl(serviceInfo, profileManager, dataRequestManager) {
+        this.profileManager = profileManager;
+        this.dataRequestManager = dataRequestManager;
+        this._serviceInfo = serviceInfo;
+        this.subscribers = new Set();
+    }
+    Object.defineProperty(ServiceImpl.prototype, "serviceInfo", {
+        get: function () {
+            return this._serviceInfo;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    ServiceImpl.prototype.toJsonString = function () {
+        return JSON.stringify(this._serviceInfo);
+    };
+    ServiceImpl.prototype.addSubscriber = function (uid) {
+        return __awaiter(this, void 0, void 0, function () {
+            var updates, grantFields;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!!this.subscribers.has(uid)) return [3 /*break*/, 3];
+                        /**
+                         * Create an data entry with the following format:
+                         * uid: processing / deny
+                         * And share back to the client with uid
+                         */
+                        // TODO: add deny logic
+                        this.subscribers.add(uid);
+                        updates = new Map();
+                        updates.set(uid, ServiceImpl.SUBSCRIPTION_PROCESSING);
+                        return [4 /*yield*/, this.profileManager.updateData(updates)];
+                    case 1:
+                        _a.sent();
+                        grantFields = new Map();
+                        grantFields.set(uid, Permissions_1.AccessRight.R);
+                        return [4 /*yield*/, this.dataRequestManager.grantAccessForClient(uid, grantFields)];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ServiceImpl.prototype.removeSubscriber = function (uid) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                // TODO: In the current implementation, remove operation
+                // is done by set "deny" into the data entry
+                this.updateData(uid, ServiceImpl.SUBSCRIPTION_DENY);
+                return [2 /*return*/];
+            });
+        });
+    };
+    ServiceImpl.prototype.updateData = function (uid, data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var updates;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.subscribers.has(uid)) return [3 /*break*/, 2];
+                        updates = new Map();
+                        updates.set(uid, data);
+                        return [4 /*yield*/, this.profileManager.updateData(updates)];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    ServiceImpl.SUBSCRIPTION_PROCESSING = 'processing';
+    ServiceImpl.SUBSCRIPTION_DENY = 'deny';
+    return ServiceImpl;
+}());
+exports.ServiceImpl = ServiceImpl;
+
+
+/***/ }),
+/* 674 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Object represents the pointer entry stored at clients side
+ * after successfully subscribe to a service
+ * {type: {spid, schema}}
+ */
+var Pointer = /** @class */ (function () {
+    function Pointer(spid, serviceType) {
+        this.spid = spid;
+        this.schema = Pointer.UID + Pointer.SEP + Pointer.BID + Pointer.SEP + serviceType;
+    }
+    Pointer.SEP = '_';
+    Pointer.SPID = 'spid';
+    Pointer.UID = 'uid';
+    Pointer.BID = 'bid';
+    return Pointer;
+}());
+exports.default = Pointer;
+
+
+/***/ }),
+/* 675 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

@@ -18,6 +18,7 @@ import OfferSearch, { OfferResultAction } from './repository/models/OfferSearch'
 import OfferShareData from './repository/models/OfferShareData';
 import { OfferShareDataRepository } from './repository/offer/OfferShareDataRepository';
 import OfferShareDataRepositoryImpl from './repository/offer/OfferShareDataRepositoryImpl';
+import { SubscriptionManager } from './manager/SubscriptionManager';
 export { RepositoryStrategyType } from './repository/RepositoryStrategyType';
 export { CompareAction } from './repository/models/CompareAction';
 export { RpcTransport } from './repository/source/rpc/RpcTransport';
@@ -45,6 +46,7 @@ export default class Base {
     private _dataRequestManager;
     private _offerManager;
     private _searchManager;
+    private _subscriptionManager;
     private _authAccountBehavior;
     private _repositoryStrategyInterceptor;
     constructor(nodeHost: string, siteOrigin: string, strategy?: RepositoryStrategyType, signerHost?: string);
@@ -55,6 +57,7 @@ export default class Base {
     readonly dataRequestManager: DataRequestManager;
     readonly offerManager: OfferManager;
     readonly searchManager: SearchManager;
+    readonly subscriptionManager: SubscriptionManager;
     private createNodeAssistant;
     private createKeyPairHelper;
 }
