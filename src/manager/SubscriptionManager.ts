@@ -1,18 +1,18 @@
-import {Service, ServiceInfo} from '../repository/service/Service';
+import { Service, ServiceInfo } from '../repository/service/Service';
 
-export interface SubscriptionManager{
+export interface SubscriptionManager {
 
-  setNameServiceId(id: string): void;
-  
-  getServiceProviders(serviceType: string): Promise<Array<string>>;
+    setNameServiceId(id: string): void;
 
-  getServiceInfo(spid: string): Promise<ServiceInfo>;
+    getServiceProviders(serviceType: string): Promise<Array<string>>;
 
-  subscribe(serviceInfo: ServiceInfo): Promise<boolean>;
-  
-  announceService(service: Service): Promise<boolean>;
+    getServiceInfo(spid: string): Promise<ServiceInfo>;
 
-  getProcessedData(spid: string): Promise<string>;
+    subscribe(serviceInfo: ServiceInfo): Promise<boolean>;
 
-  getSubscriptions(): Promise<Map<string, ServiceInfo>>;
+    announceService(service: Service): Promise<boolean>;
+
+    getProcessedData(spid: string): Promise<string>;
+
+    getSubscriptions(): Promise<Map<string, ServiceInfo>>;
 }

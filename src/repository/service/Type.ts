@@ -3,11 +3,11 @@
  * {type: [spid1, spid2, spid3...]}
  */
 export default class Type {
-  public type: string;
-  public spids: Array<string>;
+    public type: string;
+    public spids: Array<string>;
 
-  constructor(type: string) {
-    this.type = type;
-    this.spids = new Array();
-  }
+    constructor(type: string) {
+        this.type = type;
+        this.spids = new Array();
+    }
 }

@@ -12,8 +12,8 @@ import Pointer from '../repository/service/Pointer';
 
 export class SubscriptionManagerImpl implements SubscriptionManager {
 
-    public static KEY_SERVICE_INFO: string = "service";
-    public static KEY_SUBSCRIPTION: string = "subscription";
+    public static KEY_SERVICE_INFO: string = 'service';
+    public static KEY_SUBSCRIPTION: string = 'subscription';
 
     private nameServiceId: string;
     private account: Account = new Account();
@@ -48,7 +48,7 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
      * @param serviceType 
      */
     public getServiceProviders(serviceType: string): Promise<Array<string>> {
-        if(this.nameServiceId.length == 0){
+        if (this.nameServiceId.length === 0) {
             return new Promise<Array<string>>((resolve, reject) => {
                 resolve(new Array());
             });
@@ -56,15 +56,20 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
         // TODO: Since we are using global service type, have a check of the serviceType here.
         return this.dataRequestManager.requestPermissions(this.nameServiceId, [serviceType]).then(() => {
             return new Promise<Array<string>>((resolve, reject) => {
-                let timer = setInterval(async () => {
-                    const res: Map<string, string> = await this.checkRequestStatus(this.account.publicKey, this.nameServiceId, serviceType);
-                    if(res.size > 0){
-                        const data: any = res.get(serviceType);
-                        const types: Type = JSON.parse(data);
-                        resolve(types.spids);
-                        clearTimeout(timer);
-                    }
-                }, 10000);
+                let timer = setInterval(
+                    async () => {
+                        const res: Map<string, string> = await this.checkRequestStatus(
+                            this.account.publicKey, 
+                            this.nameServiceId, 
+                            serviceType);
+                        const data: string | undefined = res.get(serviceType);
+                        if (data !== undefined) {
+                            const types: Type = JSON.parse(data);
+                            resolve(types.spids);
+                            clearTimeout(timer);
+                        }
+                    },
+                    10000);
             });
         });
     }
@@ -74,47 +79,28 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
      * @param spid 
      */
     public getServiceInfo(spid: string): Promise<ServiceInfo> {
-        return this.dataRequestManager.requestPermissions(spid, [SubscriptionManagerImpl.KEY_SERVICE_INFO]).then((number)=>{
+        return this.dataRequestManager.requestPermissions(spid, [SubscriptionManagerImpl.KEY_SERVICE_INFO]).then(() => {
             // Pool the request status
             return new Promise<ServiceInfo>((resolve, reject) => {
-                let timer = setInterval(async() => {
-                    const res: Map<string, string> = await this.checkRequestStatus(this.account.publicKey, spid, SubscriptionManagerImpl.KEY_SERVICE_INFO);
-                    if(res.size > 0){
-                        const data: any = res.get(SubscriptionManagerImpl.KEY_SERVICE_INFO);
-                        const serviceInfo: ServiceInfo = JSON.parse(data);
-                        resolve(serviceInfo);
-                        clearTimeout(timer);
-                    }
-                }, 10000);
+                let timer = setInterval(
+                    async () => {
+                        const res: Map<string, string> = await this.checkRequestStatus(
+                            this.account.publicKey,
+                            spid,
+                            SubscriptionManagerImpl.KEY_SERVICE_INFO);
+                        const data: string | undefined = res.get(SubscriptionManagerImpl.KEY_SERVICE_INFO);
+                        if (data !== undefined) {
+                            const serviceInfo: ServiceInfo = JSON.parse(data);
+                            resolve(serviceInfo);
+                            clearTimeout(timer);
+                        }
+                    },
+                    10000);
             });
-        })
+        });
 
     }
-    
-    /**
-     * Private helper function to check whether the data request is fulfilled
-     * @param from 
-     * @param to 
-     * @param key 
-     */
-    private async checkRequestStatus(from: string, to: string, key: string): Promise<Map<string, string>> {
-        let result: Map<string, string> = new Map();
-        const dataRequests: Array<DataRequest> = await this.dataRequestManager.getRequests(from, to);
-        // Check if the requested data entry with the given key has been granted.
-        for(let i=0;i<dataRequests.length;++i){
-            const request: DataRequest = dataRequests[i];
-            // If this request has been granted
-            if(request.responseData.length == 0) continue;
-            const data: Map<string, string> = await this.profileManager.getAuthorizedData(request.toPk, request.responseData);
-            if(data.has(key)){
-                const entry: any = data.get(key);
-                result.set(key, entry);
-                break;
-            }
-        }
-        return result;
-    }
-    
+
     /**
      * Subscribe to the given service provider
      * @param serviceInfo 
@@ -125,41 +111,47 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
         return this.profileManager.getData().then((data) => {
             return new Promise<boolean>((resolve, reject) => {
                 const grantFields: Map<string, AccessRight> = new Map();
-                for(let i=0;i<serviceInfo.requiredKeys.length;++i){
+                for (let i = 0; i < serviceInfo.requiredKeys.length; ++i) {
                     const key: string = serviceInfo.requiredKeys[i];
-                    if(!data.has(key)){
+                    if (!data.has(key)) {
                         return resolve(false);
                     }
                     grantFields.set(key, AccessRight.R);
                 }
                 this.dataRequestManager.grantAccessForClient(serviceInfo.id, grantFields).then(() => {
                     return resolve(true);
-                })
+                });
             });
         }).then((valid) => {
             return new Promise<boolean>((resolve, reject) => {
-                if(!valid){
+                if (!valid) {
                     return resolve(false);
-                }else{
-                    let timer = setInterval(async () => {
-                        const res: Map<string, string> = await this.checkRequestStatus(this.account.publicKey, serviceInfo.id, this.account.publicKey);
-                        if(res.size > 0){
-                            // Get subscription status
-                            const data: any = res.get(this.account.publicKey);
-                            if(data === ServiceImpl.SUBSCRIPTION_DENY){
-                                resolve(false);
-                                clearTimeout(timer);
-                            }else{
-                                // Add a pointer into own storage
-                                const updates: Map<string, string> = new Map();
-                                // Add service provider pointer into own storage
-                                updates.set(serviceInfo.type, JSON.stringify(new Pointer(serviceInfo.id, serviceInfo.type)));
-                                await this.profileManager.updateData(updates);
-                                resolve(true);
-                                clearTimeout(timer);
+                } else {
+                    let timer = setInterval(
+                        async () => {
+                            const res: Map<string, string> = await this.checkRequestStatus(
+                                this.account.publicKey,
+                                serviceInfo.id,
+                                this.account.publicKey);
+                            
+                            const data: string | undefined = res.get(this.account.publicKey);    
+                            if (data !== undefined) {
+                                // Get subscription status
+                                if (data === ServiceImpl.SUBSCRIPTION_DENY) {
+                                    resolve(false);
+                                    clearTimeout(timer);
+                                } else {
+                                    // Add a pointer into own storage
+                                    const updates: Map<string, string> = new Map();
+                                    // Add service provider pointer into own storage
+                                    updates.set(serviceInfo.type, JSON.stringify(new Pointer(serviceInfo.id, serviceInfo.type)));
+                                    await this.profileManager.updateData(updates);
+                                    resolve(true);
+                                    clearTimeout(timer);
+                                }
                             }
-                        }
-                    }, 10000);
+                        },
+                        10000);
                 }
             });
         });
@@ -177,18 +169,18 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
         return this.profileManager.updateData(update).then(() => {
             return new Promise<boolean>((resolve, reject) => {
                 // Register it with the name service if presents
-                if(this.nameServiceId.length > 0){
+                if (this.nameServiceId.length > 0) {
                     this.getServiceInfo(this.nameServiceId).then((serviceInfo) => {
                         this.subscribe(serviceInfo).then((res) => {
                             resolve(res);
-                        })
+                        });
                     });
-                }else{
+                } else {
                     resolve(true);
                 }
-            })
+            });
 
-        })
+        });
 
     }
 
@@ -202,22 +194,46 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
             return this.checkRequestStatus(this.account.publicKey, spid, this.account.publicKey);
         }).then((data) => {
             return new Promise<string>((resolve, reject) => {
-                if(data.size > 0){
+                if (data.size > 0) {
                     resolve(data.get(this.account.publicKey));
-                }else{
-                    resolve("");
+                } else {
+                    resolve('');
                 }
             });
         });
     }
 
-
     public getSubscriptions(): Promise<Map<string, ServiceInfo>> {
-        //TODO: The only way to implement this function at the current design
+        // TODO: The only way to implement this function at the current design
         // seems like to be scan a list of service types of the clients?
         return new Promise<Map<string, ServiceInfo>>((resolve, reject) => {
             resolve(new Map());
-        })
+        });
+    }
+    /**
+     * Private helper function to check whether the data request is fulfilled
+     * @param from 
+     * @param to 
+     * @param key 
+     */
+    private async checkRequestStatus(from: string, to: string, key: string): Promise<Map<string, string>> {
+        let result: Map<string, string> = new Map();
+        const dataRequests: Array<DataRequest> = await this.dataRequestManager.getRequests(from, to);
+        // Check if the requested data entry with the given key has been granted.
+        for (let i = 0; i < dataRequests.length; ++i) {
+            const request: DataRequest = dataRequests[i];
+            // If this request has been granted
+            if (request.responseData.length === 0) {
+                continue;
+            }
+            const data: Map<string, string> = await this.profileManager.getAuthorizedData(request.toPk, request.responseData);
+            const entry: string | undefined = data.get(key);
+            if (entry !== undefined) {
+                result.set(key, entry);
+                break;
+            }
+        }
+        return result;
     }
 
     private onChangeAccount(account: Account) {

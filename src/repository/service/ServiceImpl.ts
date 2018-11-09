@@ -5,10 +5,9 @@ import { DataRequestManager } from '../../manager/DataRequestManager';
 
 export class ServiceImpl implements Service {
 
-    public static SUBSCRIPTION_PROCESSING: string = "processing";
-    public static SUBSCRIPTION_DENY: string = "deny";
-    
-    
+    public static SUBSCRIPTION_PROCESSING: string = 'processing';
+    public static SUBSCRIPTION_DENY: string = 'deny';
+
     private subscribers: Set<string>;
     private profileManager: ProfileManager;
     private dataRequestManager: DataRequestManager;
@@ -30,7 +29,7 @@ export class ServiceImpl implements Service {
     }
 
     public async addSubscriber(uid: string) {
-        if(!this.subscribers.has(uid)) {
+        if (!this.subscribers.has(uid)) {
             /**
              * Create an data entry with the following format:
              * uid: processing / deny
@@ -54,7 +53,7 @@ export class ServiceImpl implements Service {
     }
 
     public async updateData(uid: string, data: string) {
-        if(this.subscribers.has(uid)){
+        if (this.subscribers.has(uid)) {
             const updates: Map<string, string> = new Map();
             updates.set(uid, data);
             await this.profileManager.updateData(updates);
