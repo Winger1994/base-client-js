@@ -117,7 +117,6 @@ export default class Base {
     private _authAccountBehavior: BehaviorSubject<Account> = new BehaviorSubject<Account>(new Account());
     private _repositoryStrategyInterceptor: RepositoryStrategyInterceptor;
     
-
     constructor(nodeHost: string,
                 siteOrigin: string,
                 strategy: RepositoryStrategyType = RepositoryStrategyType.Postgres,
