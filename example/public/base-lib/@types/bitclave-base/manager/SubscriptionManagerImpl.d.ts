@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import Account from '../repository/models/Account';
 import { Service, ServiceInfo } from '../repository/service/Service';
 import { SubscriptionManager } from './SubscriptionManager';
