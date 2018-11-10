@@ -26673,6 +26673,7 @@ exports.OfferShareData = OfferShareData_1.default;
 var OfferShareDataRepositoryImpl_1 = __webpack_require__(671);
 exports.OfferShareDataRepositoryImpl = OfferShareDataRepositoryImpl_1.default;
 var SubscriptionManagerImpl_1 = __webpack_require__(672);
+exports.SubscriptionManagerImpl = SubscriptionManagerImpl_1.SubscriptionManagerImpl;
 var RepositoryStrategyType_2 = __webpack_require__(191);
 exports.RepositoryStrategyType = RepositoryStrategyType_2.RepositoryStrategyType;
 var CompareAction_1 = __webpack_require__(78);

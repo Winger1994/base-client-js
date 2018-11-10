@@ -90,6 +90,8 @@ export {
     SearchManager,
     WalletManager,
     WalletManagerImpl,
+    SubscriptionManager,
+    SubscriptionManagerImpl,
     Offer,
     OfferPrice,
     OfferPriceRules,
@@ -189,7 +191,8 @@ export default class Base {
         this._subscriptionManager = new SubscriptionManagerImpl(
             this.profileManager,
             this.dataRequestManager,
-            this._authAccountBehavior.asObservable());
+            this._authAccountBehavior.asObservable()
+        );
     }
 
     changeStrategy(strategy: RepositoryStrategyType) {

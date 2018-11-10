@@ -45,6 +45,7 @@ exports.OfferShareData = OfferShareData_1.default;
 var OfferShareDataRepositoryImpl_1 = require("./repository/offer/OfferShareDataRepositoryImpl");
 exports.OfferShareDataRepositoryImpl = OfferShareDataRepositoryImpl_1.default;
 var SubscriptionManagerImpl_1 = require("./manager/SubscriptionManagerImpl");
+exports.SubscriptionManagerImpl = SubscriptionManagerImpl_1.SubscriptionManagerImpl;
 var RepositoryStrategyType_2 = require("./repository/RepositoryStrategyType");
 exports.RepositoryStrategyType = RepositoryStrategyType_2.RepositoryStrategyType;
 var CompareAction_1 = require("./repository/models/CompareAction");

@@ -19,6 +19,7 @@ import OfferShareData from './repository/models/OfferShareData';
 import { OfferShareDataRepository } from './repository/offer/OfferShareDataRepository';
 import OfferShareDataRepositoryImpl from './repository/offer/OfferShareDataRepositoryImpl';
 import { SubscriptionManager } from './manager/SubscriptionManager';
+import { SubscriptionManagerImpl } from './manager/SubscriptionManagerImpl';
 export { RepositoryStrategyType } from './repository/RepositoryStrategyType';
 export { CompareAction } from './repository/models/CompareAction';
 export { RpcTransport } from './repository/source/rpc/RpcTransport';
@@ -38,7 +39,7 @@ export { AcceptedField } from './utils/keypair/AcceptedField';
 export { RpcToken } from './utils/keypair/rpc/RpcToken';
 export { RpcAuth } from './utils/keypair/rpc/RpcAuth';
 export { BaseAddrPair, AddrRecord, WalletsRecords, WealthRecord, WealthPtr, ProfileUser, ProfileWealthValidator } from './utils/types/BaseTypes';
-export { AccountManager, ProfileManager, DataRequestManager, OfferManager, SearchManager, WalletManager, WalletManagerImpl, Offer, OfferPrice, OfferPriceRules, SearchRequest, OfferSearch, OfferSearchResultItem, OfferResultAction, OfferShareData, OfferShareDataRepository, OfferShareDataRepositoryImpl, OfferSearchRepository, OfferSearchRepositoryImpl, HttpTransportImpl };
+export { AccountManager, ProfileManager, DataRequestManager, OfferManager, SearchManager, WalletManager, WalletManagerImpl, SubscriptionManager, SubscriptionManagerImpl, Offer, OfferPrice, OfferPriceRules, SearchRequest, OfferSearch, OfferSearchResultItem, OfferResultAction, OfferShareData, OfferShareDataRepository, OfferShareDataRepositoryImpl, OfferSearchRepository, OfferSearchRepositoryImpl, HttpTransportImpl };
 export default class Base {
     private _walletManager;
     private _accountManager;
