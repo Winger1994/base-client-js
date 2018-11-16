@@ -38,6 +38,7 @@ export { Permissions, AccessRight } from './utils/keypair/Permissions';
 export { AcceptedField } from './utils/keypair/AcceptedField';
 export { RpcToken } from './utils/keypair/rpc/RpcToken';
 export { RpcAuth } from './utils/keypair/rpc/RpcAuth';
+export { Service, ServiceInfo } from './repository/service/Service';
 export { BaseAddrPair, AddrRecord, WalletsRecords, WealthRecord, WealthPtr, ProfileUser, ProfileWealthValidator } from './utils/types/BaseTypes';
 export { AccountManager, ProfileManager, DataRequestManager, OfferManager, SearchManager, WalletManager, WalletManagerImpl, SubscriptionManager, SubscriptionManagerImpl, Offer, OfferPrice, OfferPriceRules, SearchRequest, OfferSearch, OfferSearchResultItem, OfferResultAction, OfferShareData, OfferShareDataRepository, OfferShareDataRepositoryImpl, OfferSearchRepository, OfferSearchRepositoryImpl, HttpTransportImpl };
 export default class Base {

@@ -46,9 +46,9 @@ import { SearchManagerImpl } from './manager/SearchManagerImpl';
 import { WalletManagerImpl } from './manager/WalletManagerImpl';
 import { OfferSearchRepository } from './repository/search/OfferSearchRepository';
 import { OfferSearchRepositoryImpl } from './repository/search/OfferSearchRepositoryImpl';
-import  OfferSearchResultItem  from './repository/models/OfferSearchResultItem';
+import OfferSearchResultItem from './repository/models/OfferSearchResultItem';
 import OfferSearch, { OfferResultAction } from './repository/models/OfferSearch';
-import  OfferShareData  from './repository/models/OfferShareData';
+import OfferShareData from './repository/models/OfferShareData';
 import { OfferShareDataRepository } from './repository/offer/OfferShareDataRepository';
 import OfferShareDataRepositoryImpl from './repository/offer/OfferShareDataRepositoryImpl';
 import { SubscriptionManager } from './manager/SubscriptionManager';
@@ -72,6 +72,7 @@ export { Permissions, AccessRight } from './utils/keypair/Permissions';
 export { AcceptedField } from './utils/keypair/AcceptedField';
 export { RpcToken } from './utils/keypair/rpc/RpcToken';
 export { RpcAuth } from './utils/keypair/rpc/RpcAuth';
+export { Service, ServiceInfo } from './repository/service/Service';
 
 export {
     BaseAddrPair,
@@ -118,11 +119,11 @@ export default class Base {
     private _subscriptionManager: SubscriptionManager;
     private _authAccountBehavior: BehaviorSubject<Account> = new BehaviorSubject<Account>(new Account());
     private _repositoryStrategyInterceptor: RepositoryStrategyInterceptor;
-    
+
     constructor(nodeHost: string,
-                siteOrigin: string,
-                strategy: RepositoryStrategyType = RepositoryStrategyType.Postgres,
-                signerHost: string = '') {
+        siteOrigin: string,
+        strategy: RepositoryStrategyType = RepositoryStrategyType.Postgres,
+        signerHost: string = '') {
 
         this._repositoryStrategyInterceptor = new RepositoryStrategyInterceptor(strategy);
 
@@ -236,9 +237,9 @@ export default class Base {
     }
 
     private createKeyPairHelper(signerHost: string,
-                                permissionSource: PermissionsSource,
-                                siteDataSource: SiteDataSource,
-                                siteOrigin: string): KeyPairHelper {
+        permissionSource: PermissionsSource,
+        siteDataSource: SiteDataSource,
+        siteOrigin: string): KeyPairHelper {
         return (signerHost.length === 0)
             ? KeyPairFactory.createDefaultKeyPair(permissionSource, siteDataSource, siteOrigin)
             : KeyPairFactory.createRpcKeyPair(TransportFactory.createJsonRpcHttpTransport(signerHost));

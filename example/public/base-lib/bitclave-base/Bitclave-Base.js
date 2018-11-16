@@ -26701,6 +26701,8 @@ var RpcToken_1 = __webpack_require__(17);
 exports.RpcToken = RpcToken_1.RpcToken;
 var RpcAuth_1 = __webpack_require__(675);
 exports.RpcAuth = RpcAuth_1.RpcAuth;
+var Service_1 = __webpack_require__(676);
+exports.ServiceInfo = Service_1.ServiceInfo;
 var BaseTypes_1 = __webpack_require__(86);
 exports.BaseAddrPair = BaseTypes_1.BaseAddrPair;
 exports.AddrRecord = BaseTypes_1.AddrRecord;
@@ -56366,6 +56368,25 @@ var RpcAuth = /** @class */ (function (_super) {
     return RpcAuth;
 }(RpcToken_1.RpcToken));
 exports.RpcAuth = RpcAuth;
+
+
+/***/ }),
+/* 676 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var ServiceInfo = /** @class */ (function () {
+    function ServiceInfo(type, id, description, requiredKeys) {
+        this.type = type;
+        this.id = id;
+        this.description = description;
+        this.requiredKeys = requiredKeys;
+    }
+    return ServiceInfo;
+}());
+exports.ServiceInfo = ServiceInfo;
 
 
 /***/ })
