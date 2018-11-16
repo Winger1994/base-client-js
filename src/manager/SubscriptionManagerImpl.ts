@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs/Observable';
 import Account from '../repository/models/Account';
 import { Service, ServiceInfo } from '../repository/service/Service';
-import { ServiceImpl } from '../repository/service/ServiceImpl';
+import ServiceImpl from '../repository/service/ServiceImpl';
 import { SubscriptionManager } from './SubscriptionManager';
 import { ProfileManager } from './ProfileManager';
 import { DataRequestManager } from './DataRequestManager';

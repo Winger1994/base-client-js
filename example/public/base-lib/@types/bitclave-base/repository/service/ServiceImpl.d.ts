@@ -1,7 +1,7 @@
 import { Service, ServiceInfo } from './Service';
 import { ProfileManager } from '../../manager/ProfileManager';
 import { DataRequestManager } from '../../manager/DataRequestManager';
-export declare class ServiceImpl implements Service {
+export default class ServiceImpl implements Service {
     static SUBSCRIPTION_PROCESSING: string;
     static SUBSCRIPTION_DENY: string;
     private subscribers;

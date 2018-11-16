@@ -115,5 +115,5 @@ var ServiceImpl = /** @class */ (function () {
     ServiceImpl.SUBSCRIPTION_DENY = 'deny';
     return ServiceImpl;
 }());
-exports.ServiceImpl = ServiceImpl;
+exports.default = ServiceImpl;
 //# sourceMappingURL=ServiceImpl.js.map

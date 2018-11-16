@@ -56056,7 +56056,7 @@ var SubscriptionManagerImpl = /** @class */ (function () {
                                     res = _a.sent();
                                     data = res.get(this.account.publicKey);
                                     if (!(data !== undefined)) return [3 /*break*/, 4];
-                                    if (!(data === ServiceImpl_1.ServiceImpl.SUBSCRIPTION_DENY)) return [3 /*break*/, 2];
+                                    if (!(data === ServiceImpl_1.default.SUBSCRIPTION_DENY)) return [3 /*break*/, 2];
                                     resolve(false);
                                     clearTimeout(timer_1);
                                     return [3 /*break*/, 4];
@@ -56305,7 +56305,7 @@ var ServiceImpl = /** @class */ (function () {
     ServiceImpl.SUBSCRIPTION_DENY = 'deny';
     return ServiceImpl;
 }());
-exports.ServiceImpl = ServiceImpl;
+exports.default = ServiceImpl;
 
 
 /***/ }),

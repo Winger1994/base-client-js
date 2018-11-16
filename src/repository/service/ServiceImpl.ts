@@ -3,7 +3,7 @@ import { AccessRight } from '../../utils/keypair/Permissions';
 import { ProfileManager } from '../../manager/ProfileManager';
 import { DataRequestManager } from '../../manager/DataRequestManager';
 
-export class ServiceImpl implements Service {
+export default class ServiceImpl implements Service {
 
     public static SUBSCRIPTION_PROCESSING: string = 'processing';
     public static SUBSCRIPTION_DENY: string = 'deny';
