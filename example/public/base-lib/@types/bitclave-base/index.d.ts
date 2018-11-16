@@ -20,6 +20,9 @@ import { OfferShareDataRepository } from './repository/offer/OfferShareDataRepos
 import OfferShareDataRepositoryImpl from './repository/offer/OfferShareDataRepositoryImpl';
 import { SubscriptionManager } from './manager/SubscriptionManager';
 import { SubscriptionManagerImpl } from './manager/SubscriptionManagerImpl';
+import ServiceImpl from './repository/service/ServiceImpl';
+import SubscriptionPointer from './repository/service/SubscriptionPointer';
+import ServiceType from './repository/service/ServiceType';
 export { RepositoryStrategyType } from './repository/RepositoryStrategyType';
 export { CompareAction } from './repository/models/CompareAction';
 export { RpcTransport } from './repository/source/rpc/RpcTransport';
@@ -40,7 +43,7 @@ export { RpcToken } from './utils/keypair/rpc/RpcToken';
 export { RpcAuth } from './utils/keypair/rpc/RpcAuth';
 export { Service, ServiceInfo } from './repository/service/Service';
 export { BaseAddrPair, AddrRecord, WalletsRecords, WealthRecord, WealthPtr, ProfileUser, ProfileWealthValidator } from './utils/types/BaseTypes';
-export { AccountManager, ProfileManager, DataRequestManager, OfferManager, SearchManager, WalletManager, WalletManagerImpl, SubscriptionManager, SubscriptionManagerImpl, Offer, OfferPrice, OfferPriceRules, SearchRequest, OfferSearch, OfferSearchResultItem, OfferResultAction, OfferShareData, OfferShareDataRepository, OfferShareDataRepositoryImpl, OfferSearchRepository, OfferSearchRepositoryImpl, HttpTransportImpl };
+export { AccountManager, ProfileManager, DataRequestManager, OfferManager, SearchManager, WalletManager, WalletManagerImpl, SubscriptionManager, SubscriptionManagerImpl, ServiceImpl, ServiceType, SubscriptionPointer, Offer, OfferPrice, OfferPriceRules, SearchRequest, OfferSearch, OfferSearchResultItem, OfferResultAction, OfferShareData, OfferShareDataRepository, OfferShareDataRepositoryImpl, OfferSearchRepository, OfferSearchRepositoryImpl, HttpTransportImpl };
 export default class Base {
     private _walletManager;
     private _accountManager;

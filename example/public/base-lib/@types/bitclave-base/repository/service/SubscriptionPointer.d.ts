@@ -3,7 +3,7 @@
  * after successfully subscribe to a service
  * {type: {spid, schema}}
  */
-export default class Pointer {
+export default class SubscriptionPointer {
     static SEP: string;
     static SPID: string;
     static UID: string;

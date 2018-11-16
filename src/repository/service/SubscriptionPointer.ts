@@ -3,7 +3,7 @@
  * after successfully subscribe to a service
  * {type: {spid, schema}}
  */
-export default class Pointer {
+export default class SubscriptionPointer {
     public static SEP: string = '_';
     public static SPID: string = 'spid';
     public static UID: string = 'uid';
@@ -14,6 +14,6 @@ export default class Pointer {
 
     constructor(spid: string, serviceType: string) {
         this.spid = spid;
-        this.schema = Pointer.UID + Pointer.SEP + Pointer.BID + Pointer.SEP + serviceType;
+        this.schema = SubscriptionPointer.UID + SubscriptionPointer.SEP + SubscriptionPointer.BID + SubscriptionPointer.SEP + serviceType;
     }
 }

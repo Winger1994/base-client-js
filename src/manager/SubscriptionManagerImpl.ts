@@ -7,8 +7,8 @@ import { ProfileManager } from './ProfileManager';
 import { DataRequestManager } from './DataRequestManager';
 import DataRequest from '../repository/models/DataRequest';
 import { AccessRight } from '../utils/keypair/Permissions';
-import Type from '../repository/service/Type';
-import Pointer from '../repository/service/Pointer';
+import ServiceType from '../repository/service/ServiceType';
+import SubscriptionPointer from '../repository/service/SubscriptionPointer';
 
 export class SubscriptionManagerImpl implements SubscriptionManager {
 
@@ -59,12 +59,12 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
                 let timer = setInterval(
                     async () => {
                         const res: Map<string, string> = await this.checkRequestStatus(
-                            this.account.publicKey, 
-                            this.nameServiceId, 
+                            this.account.publicKey,
+                            this.nameServiceId,
                             serviceType);
                         const data: string | undefined = res.get(serviceType);
                         if (data !== undefined) {
-                            const types: Type = JSON.parse(data);
+                            const types: ServiceType = JSON.parse(data);
                             resolve(types.spids);
                             clearTimeout(timer);
                         }
@@ -133,8 +133,8 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
                                 this.account.publicKey,
                                 serviceInfo.id,
                                 this.account.publicKey);
-                            
-                            const data: string | undefined = res.get(this.account.publicKey);    
+
+                            const data: string | undefined = res.get(this.account.publicKey);
                             if (data !== undefined) {
                                 // Get subscription status
                                 if (data === ServiceImpl.SUBSCRIPTION_DENY) {
@@ -144,7 +144,9 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
                                     // Add a pointer into own storage
                                     const updates: Map<string, string> = new Map();
                                     // Add service provider pointer into own storage
-                                    updates.set(serviceInfo.type, JSON.stringify(new Pointer(serviceInfo.id, serviceInfo.type)));
+                                    updates.set(
+                                        serviceInfo.type, 
+                                        JSON.stringify(new SubscriptionPointer(serviceInfo.id, serviceInfo.type)));
                                     await this.profileManager.updateData(updates);
                                     resolve(true);
                                     clearTimeout(timer);

@@ -38,7 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Account_1 = require("../repository/models/Account");
 var ServiceImpl_1 = require("../repository/service/ServiceImpl");
 var Permissions_1 = require("../utils/keypair/Permissions");
-var Pointer_1 = require("../repository/service/Pointer");
+var SubscriptionPointer_1 = require("../repository/service/SubscriptionPointer");
 var SubscriptionManagerImpl = /** @class */ (function () {
     function SubscriptionManagerImpl(profileManager, dataRequestManager, authAccountBehavior) {
         this.account = new Account_1.default();
@@ -165,7 +165,7 @@ var SubscriptionManagerImpl = /** @class */ (function () {
                                 case 2:
                                     updates = new Map();
                                     // Add service provider pointer into own storage
-                                    updates.set(serviceInfo.type, JSON.stringify(new Pointer_1.default(serviceInfo.id, serviceInfo.type)));
+                                    updates.set(serviceInfo.type, JSON.stringify(new SubscriptionPointer_1.default(serviceInfo.id, serviceInfo.type)));
                                     return [4 /*yield*/, this.profileManager.updateData(updates)];
                                 case 3:
                                     _a.sent();
