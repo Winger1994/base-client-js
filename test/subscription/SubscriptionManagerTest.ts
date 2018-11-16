@@ -9,9 +9,9 @@ import { AccessRight } from '../../src/utils/keypair/Permissions';
 import { WalletManagerImpl } from '../../src/manager/WalletManagerImpl';
 import { RpcTransport } from '../../src/repository/source/rpc/RpcTransport';
 import { ServiceInfo, Service } from '../../src/repository/service/Service';
-import { ServiceImpl } from '../../src/repository/service/ServiceImpl';
+import ServiceImpl from '../../src/repository/service/ServiceImpl';
 import { SubscriptionManagerImpl } from '../../src/manager/SubscriptionManagerImpl';
-import Type from '../../src/repository/service/Type';
+import ServiceType from '../../src/repository/service/ServiceType';
 
 const should = require('chai')
     .use(require('chai-as-promised'))
@@ -74,7 +74,7 @@ describe('Base SubscriptionManager Test', async () => {
 
     it('gpa service announce', async () => {
         baseGPAService.subscriptionManager.setNameServiceId(accNameService.publicKey);
-        baseGPAService.subscriptionManager.announceService(gpaService).then(async (res) => {
+        const promise = baseGPAService.subscriptionManager.announceService(gpaService).then(async (res) => {
             res.should.be.equal(true);
             // gpa service verify if its subscription to the name service succeed
             const record: string = await baseGPAService.subscriptionManager.getProcessedData(accNameService.publicKey);
@@ -111,7 +111,7 @@ describe('Base SubscriptionManager Test', async () => {
                 // Register this subscriber into own storage & share back pointer
                 nameService.addSubscriber(serviceInfo.id);
                 // Add this subscriber's service id into type
-                const types: Type = new Type(serviceInfo.type);
+                const types: ServiceType = new ServiceType(serviceInfo.type);
                 types.spids.push(serviceInfo.id);
                 const updates: Map<string, string> = new Map();
                 updates.set(types.type, JSON.stringify(types));
@@ -119,16 +119,15 @@ describe('Base SubscriptionManager Test', async () => {
                 clearTimeout(waitTimer2);
             },
             60000);
+        await promise;
     });
 
     it('client get service provider ids from name service', async () => {
         // Client query name service for the gpa service
         baseUser.subscriptionManager.setNameServiceId(accNameService.publicKey);
-        baseUser.subscriptionManager.getServiceProviders('gpa').then((spids) => {
+        const promise = baseUser.subscriptionManager.getServiceProviders('gpa').then((spids) => {
             spids.length.should.be.equal(1);
             spids[0].should.be.equal(accGPAService.publicKey);
-            console.log('gpa service provider ids');
-            console.log(spids);
         });
         // Name service grant permission
         const waitTimer = setInterval(
@@ -151,14 +150,13 @@ describe('Base SubscriptionManager Test', async () => {
                 clearTimeout(waitTimer);
             },
             10000);
+        await promise;
     });
 
     it('client get service info from gpa service', async () => {
         // Client query gpa service about its service info
-        baseUser.subscriptionManager.getServiceInfo(accGPAService.publicKey).then((serviceInfo) => {
+        const promise = baseUser.subscriptionManager.getServiceInfo(accGPAService.publicKey).then((serviceInfo) => {
             JSON.stringify(serviceInfo).should.be.equal(gpaService.toJsonString());
-            console.log('gpa service info');
-            console.log(serviceInfo);
         });
         // Gpa service grant permission
         const waitTimer = setInterval(
@@ -180,5 +178,6 @@ describe('Base SubscriptionManager Test', async () => {
                 clearTimeout(waitTimer);
             },
             10000);
+        await promise;
     });
 });
