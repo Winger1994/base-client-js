@@ -1,13 +1,7 @@
 import Base from '../../src/Base';
 import Account from '../../src/repository/models/Account';
 import DataRequest from '../../src/repository/models/DataRequest';
-import { TransportFactory } from '../../src/repository/source/TransportFactory';
-import AuthenticatorHelper from '../AuthenticatorHelper';
-import { RepositoryStrategyType } from '../../src/repository/RepositoryStrategyType';
-import { WalletUtils, WalletVerificationStatus } from '../../src/utils/WalletUtils';
 import { AccessRight } from '../../src/utils/keypair/Permissions';
-import { WalletManagerImpl } from '../../src/manager/WalletManagerImpl';
-import { RpcTransport } from '../../src/repository/source/rpc/RpcTransport';
 import { ServiceInfo, Service } from '../../src/repository/service/Service';
 import ServiceImpl from '../../src/repository/service/ServiceImpl';
 import { SubscriptionManagerImpl } from '../../src/manager/SubscriptionManagerImpl';
@@ -118,7 +112,7 @@ describe('Base SubscriptionManager Test', async () => {
                 await baseNameService.profileManager.updateData(updates);
                 clearTimeout(waitTimer2);
             },
-            60000);
+            20000);
         await promise;
     });
 
