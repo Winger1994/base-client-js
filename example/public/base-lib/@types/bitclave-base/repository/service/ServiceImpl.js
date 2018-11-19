@@ -73,7 +73,7 @@ var ServiceImpl = /** @class */ (function () {
                     case 1:
                         _a.sent();
                         grantFields = new Map();
-                        return [4 /*yield*/, this.dataRequestManager.getGrantedPermissions(uid)];
+                        return [4 /*yield*/, this.dataRequestManager.getGrantedPermissionsToMe(uid)];
                     case 2:
                         keys = _a.sent();
                         for (i = 0; i < keys.length; ++i) {

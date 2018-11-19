@@ -42,7 +42,7 @@ export default class ServiceImpl implements Service {
             await this.profileManager.updateData(updates);
             const grantFields: Map<string, AccessRight> = new Map();
             // Load all previously granted permissions
-            const keys: Array<string> = await this.dataRequestManager.getGrantedPermissions(uid);
+            const keys: Array<string> = await this.dataRequestManager.getGrantedPermissionsToMe(uid);
             for (let i = 0; i < keys.length; ++i) {
                 grantFields.set(keys[i], AccessRight.R);
             }

@@ -26701,7 +26701,7 @@ var ServiceImpl = /** @class */ (function () {
                     case 1:
                         _a.sent();
                         grantFields = new Map();
-                        return [4 /*yield*/, this.dataRequestManager.getGrantedPermissions(uid)];
+                        return [4 /*yield*/, this.dataRequestManager.getGrantedPermissionsToMe(uid)];
                     case 2:
                         keys = _a.sent();
                         for (i = 0; i < keys.length; ++i) {
@@ -56133,7 +56133,9 @@ var SubscriptionManagerImpl = /** @class */ (function () {
         // TODO: Since we are using global service type, have a check of the serviceType here.
         return this.dataRequestManager.getRequestedPermissions(this.nameServiceId).then(function (keys) {
             // Get all the previously requested keys
-            keys.push(serviceType);
+            if (keys.indexOf(serviceType) === -1) {
+                keys.push(serviceType);
+            }
             return _this.dataRequestManager.requestPermissions(_this.nameServiceId, keys).then(function () {
                 return new Promise(function (resolve, reject) {
                     var timer = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
@@ -56165,7 +56167,9 @@ var SubscriptionManagerImpl = /** @class */ (function () {
         var _this = this;
         return this.dataRequestManager.getRequestedPermissions(spid).then(function (keys) {
             // Get all the previously requested keys
-            keys.push(SubscriptionManagerImpl.KEY_SERVICE_INFO);
+            if (keys.indexOf(SubscriptionManagerImpl.KEY_SERVICE_INFO) === -1) {
+                keys.push(SubscriptionManagerImpl.KEY_SERVICE_INFO);
+            }
             return _this.dataRequestManager.requestPermissions(spid, keys).then(function () {
                 // Pool the request status
                 return new Promise(function (resolve, reject) {

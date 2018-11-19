@@ -56,7 +56,9 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
         // TODO: Since we are using global service type, have a check of the serviceType here.
         return this.dataRequestManager.getRequestedPermissions(this.nameServiceId).then((keys) => {
             // Get all the previously requested keys
-            keys.push(serviceType);
+            if (keys.indexOf(serviceType) === -1) {
+                keys.push(serviceType);
+            }
             return this.dataRequestManager.requestPermissions(this.nameServiceId, keys).then(() => {
                 return new Promise<Array<string>>((resolve, reject) => {
                     let timer = setInterval(
@@ -85,7 +87,9 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
     public getServiceInfo(spid: string): Promise<ServiceInfo> {
         return this.dataRequestManager.getRequestedPermissions(spid).then((keys) => {
             // Get all the previously requested keys
-            keys.push(SubscriptionManagerImpl.KEY_SERVICE_INFO);
+            if (keys.indexOf(SubscriptionManagerImpl.KEY_SERVICE_INFO) === -1) {
+                keys.push(SubscriptionManagerImpl.KEY_SERVICE_INFO);
+            }
             return this.dataRequestManager.requestPermissions(spid, keys).then(() => {
                 // Pool the request status
                 return new Promise<ServiceInfo>((resolve, reject) => {
