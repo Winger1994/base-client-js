@@ -55,11 +55,11 @@ var ServiceImpl = /** @class */ (function () {
     };
     ServiceImpl.prototype.addSubscriber = function (uid) {
         return __awaiter(this, void 0, void 0, function () {
-            var updates, grantFields;
+            var updates, grantFields, keys, i;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!!this.subscribers.has(uid)) return [3 /*break*/, 3];
+                        if (!!this.subscribers.has(uid)) return [3 /*break*/, 4];
                         /**
                          * Create an data entry with the following format:
                          * uid: processing / deny
@@ -73,12 +73,18 @@ var ServiceImpl = /** @class */ (function () {
                     case 1:
                         _a.sent();
                         grantFields = new Map();
+                        return [4 /*yield*/, this.dataRequestManager.getGrantedPermissions(uid)];
+                    case 2:
+                        keys = _a.sent();
+                        for (i = 0; i < keys.length; ++i) {
+                            grantFields.set(keys[i], Permissions_1.AccessRight.R);
+                        }
                         grantFields.set(uid, Permissions_1.AccessRight.R);
                         return [4 /*yield*/, this.dataRequestManager.grantAccessForClient(uid, grantFields)];
-                    case 2:
+                    case 3:
                         _a.sent();
-                        _a.label = 3;
-                    case 3: return [2 /*return*/];
+                        _a.label = 4;
+                    case 4: return [2 /*return*/];
                 }
             });
         });

@@ -54,22 +54,26 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
             });
         }
         // TODO: Since we are using global service type, have a check of the serviceType here.
-        return this.dataRequestManager.requestPermissions(this.nameServiceId, [serviceType]).then(() => {
-            return new Promise<Array<string>>((resolve, reject) => {
-                let timer = setInterval(
-                    async () => {
-                        const res: Map<string, string> = await this.checkRequestStatus(
-                            this.account.publicKey,
-                            this.nameServiceId,
-                            serviceType);
-                        const data: string | undefined = res.get(serviceType);
-                        if (data !== undefined) {
-                            const types: ServiceType = JSON.parse(data);
-                            resolve(types.spids);
-                            clearTimeout(timer);
-                        }
-                    },
-                    10000);
+        return this.dataRequestManager.getRequestedPermissions(this.nameServiceId).then((keys) => {
+            // Get all the previously requested keys
+            keys.push(serviceType);
+            return this.dataRequestManager.requestPermissions(this.nameServiceId, keys).then(() => {
+                return new Promise<Array<string>>((resolve, reject) => {
+                    let timer = setInterval(
+                        async () => {
+                            const res: Map<string, string> = await this.checkRequestStatus(
+                                this.account.publicKey,
+                                this.nameServiceId,
+                                serviceType);
+                            const data: string | undefined = res.get(serviceType);
+                            if (data !== undefined) {
+                                const types: ServiceType = JSON.parse(data);
+                                resolve(types.spids);
+                                clearTimeout(timer);
+                            }
+                        },
+                        10000);
+                });
             });
         });
     }
@@ -79,26 +83,29 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
      * @param spid 
      */
     public getServiceInfo(spid: string): Promise<ServiceInfo> {
-        return this.dataRequestManager.requestPermissions(spid, [SubscriptionManagerImpl.KEY_SERVICE_INFO]).then(() => {
-            // Pool the request status
-            return new Promise<ServiceInfo>((resolve, reject) => {
-                let timer = setInterval(
-                    async () => {
-                        const res: Map<string, string> = await this.checkRequestStatus(
-                            this.account.publicKey,
-                            spid,
-                            SubscriptionManagerImpl.KEY_SERVICE_INFO);
-                        const data: string | undefined = res.get(SubscriptionManagerImpl.KEY_SERVICE_INFO);
-                        if (data !== undefined) {
-                            const serviceInfo: ServiceInfo = JSON.parse(data);
-                            resolve(serviceInfo);
-                            clearTimeout(timer);
-                        }
-                    },
-                    10000);
+        return this.dataRequestManager.getRequestedPermissions(spid).then((keys) => {
+            // Get all the previously requested keys
+            keys.push(SubscriptionManagerImpl.KEY_SERVICE_INFO);
+            return this.dataRequestManager.requestPermissions(spid, keys).then(() => {
+                // Pool the request status
+                return new Promise<ServiceInfo>((resolve, reject) => {
+                    let timer = setInterval(
+                        async () => {
+                            const res: Map<string, string> = await this.checkRequestStatus(
+                                this.account.publicKey,
+                                spid,
+                                SubscriptionManagerImpl.KEY_SERVICE_INFO);
+                            const data: string | undefined = res.get(SubscriptionManagerImpl.KEY_SERVICE_INFO);
+                            if (data !== undefined) {
+                                const serviceInfo: ServiceInfo = JSON.parse(data);
+                                resolve(serviceInfo);
+                                clearTimeout(timer);
+                            }
+                        },
+                        10000);
+                });
             });
         });
-
     }
 
     /**
@@ -118,9 +125,19 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
                     }
                     grantFields.set(key, AccessRight.R);
                 }
-                this.dataRequestManager.grantAccessForClient(serviceInfo.id, grantFields).then(() => {
-                    return resolve(true);
+                // Get all previously granted permissions
+                this.dataRequestManager.getGrantedPermissionsToMe(serviceInfo.id).then((keys) => {
+                    for (let i = 0; i < keys.length; ++i) {
+                        // TODO: getGrantedPermissionsToMe only returns a list of entries
+                        // that have been granted to the client, but we do not know the
+                        // corresponding AccessRight
+                        grantFields.set(keys[i], AccessRight.R);
+                    }
+                    this.dataRequestManager.grantAccessForClient(serviceInfo.id, grantFields).then(() => {
+                        return resolve(true);
+                    });
                 });
+
             });
         }).then((valid) => {
             return new Promise<boolean>((resolve, reject) => {
@@ -145,7 +162,7 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
                                     const updates: Map<string, string> = new Map();
                                     // Add service provider pointer into own storage
                                     updates.set(
-                                        serviceInfo.type, 
+                                        serviceInfo.type,
                                         JSON.stringify(new SubscriptionPointer(serviceInfo.id, serviceInfo.type)));
                                     await this.profileManager.updateData(updates);
                                     resolve(true);
@@ -181,7 +198,6 @@ export class SubscriptionManagerImpl implements SubscriptionManager {
                     resolve(true);
                 }
             });
-
         });
 
     }

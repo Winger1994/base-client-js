@@ -26683,11 +26683,11 @@ var ServiceImpl = /** @class */ (function () {
     };
     ServiceImpl.prototype.addSubscriber = function (uid) {
         return __awaiter(this, void 0, void 0, function () {
-            var updates, grantFields;
+            var updates, grantFields, keys, i;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!!this.subscribers.has(uid)) return [3 /*break*/, 3];
+                        if (!!this.subscribers.has(uid)) return [3 /*break*/, 4];
                         /**
                          * Create an data entry with the following format:
                          * uid: processing / deny
@@ -26701,12 +26701,18 @@ var ServiceImpl = /** @class */ (function () {
                     case 1:
                         _a.sent();
                         grantFields = new Map();
+                        return [4 /*yield*/, this.dataRequestManager.getGrantedPermissions(uid)];
+                    case 2:
+                        keys = _a.sent();
+                        for (i = 0; i < keys.length; ++i) {
+                            grantFields.set(keys[i], Permissions_1.AccessRight.R);
+                        }
                         grantFields.set(uid, Permissions_1.AccessRight.R);
                         return [4 /*yield*/, this.dataRequestManager.grantAccessForClient(uid, grantFields)];
-                    case 2:
+                    case 3:
                         _a.sent();
-                        _a.label = 3;
-                    case 3: return [2 /*return*/];
+                        _a.label = 4;
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -56125,25 +56131,29 @@ var SubscriptionManagerImpl = /** @class */ (function () {
             });
         }
         // TODO: Since we are using global service type, have a check of the serviceType here.
-        return this.dataRequestManager.requestPermissions(this.nameServiceId, [serviceType]).then(function () {
-            return new Promise(function (resolve, reject) {
-                var timer = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
-                    var res, data, types;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, this.checkRequestStatus(this.account.publicKey, this.nameServiceId, serviceType)];
-                            case 1:
-                                res = _a.sent();
-                                data = res.get(serviceType);
-                                if (data !== undefined) {
-                                    types = JSON.parse(data);
-                                    resolve(types.spids);
-                                    clearTimeout(timer);
-                                }
-                                return [2 /*return*/];
-                        }
-                    });
-                }); }, 10000);
+        return this.dataRequestManager.getRequestedPermissions(this.nameServiceId).then(function (keys) {
+            // Get all the previously requested keys
+            keys.push(serviceType);
+            return _this.dataRequestManager.requestPermissions(_this.nameServiceId, keys).then(function () {
+                return new Promise(function (resolve, reject) {
+                    var timer = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
+                        var res, data, types;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, this.checkRequestStatus(this.account.publicKey, this.nameServiceId, serviceType)];
+                                case 1:
+                                    res = _a.sent();
+                                    data = res.get(serviceType);
+                                    if (data !== undefined) {
+                                        types = JSON.parse(data);
+                                        resolve(types.spids);
+                                        clearTimeout(timer);
+                                    }
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); }, 10000);
+                });
             });
         });
     };
@@ -56153,26 +56163,30 @@ var SubscriptionManagerImpl = /** @class */ (function () {
      */
     SubscriptionManagerImpl.prototype.getServiceInfo = function (spid) {
         var _this = this;
-        return this.dataRequestManager.requestPermissions(spid, [SubscriptionManagerImpl.KEY_SERVICE_INFO]).then(function () {
-            // Pool the request status
-            return new Promise(function (resolve, reject) {
-                var timer = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
-                    var res, data, serviceInfo;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4 /*yield*/, this.checkRequestStatus(this.account.publicKey, spid, SubscriptionManagerImpl.KEY_SERVICE_INFO)];
-                            case 1:
-                                res = _a.sent();
-                                data = res.get(SubscriptionManagerImpl.KEY_SERVICE_INFO);
-                                if (data !== undefined) {
-                                    serviceInfo = JSON.parse(data);
-                                    resolve(serviceInfo);
-                                    clearTimeout(timer);
-                                }
-                                return [2 /*return*/];
-                        }
-                    });
-                }); }, 10000);
+        return this.dataRequestManager.getRequestedPermissions(spid).then(function (keys) {
+            // Get all the previously requested keys
+            keys.push(SubscriptionManagerImpl.KEY_SERVICE_INFO);
+            return _this.dataRequestManager.requestPermissions(spid, keys).then(function () {
+                // Pool the request status
+                return new Promise(function (resolve, reject) {
+                    var timer = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
+                        var res, data, serviceInfo;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, this.checkRequestStatus(this.account.publicKey, spid, SubscriptionManagerImpl.KEY_SERVICE_INFO)];
+                                case 1:
+                                    res = _a.sent();
+                                    data = res.get(SubscriptionManagerImpl.KEY_SERVICE_INFO);
+                                    if (data !== undefined) {
+                                        serviceInfo = JSON.parse(data);
+                                        resolve(serviceInfo);
+                                        clearTimeout(timer);
+                                    }
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); }, 10000);
+                });
             });
         });
     };
@@ -56194,8 +56208,17 @@ var SubscriptionManagerImpl = /** @class */ (function () {
                     }
                     grantFields.set(key, Permissions_1.AccessRight.R);
                 }
-                _this.dataRequestManager.grantAccessForClient(serviceInfo.id, grantFields).then(function () {
-                    return resolve(true);
+                // Get all previously granted permissions
+                _this.dataRequestManager.getGrantedPermissionsToMe(serviceInfo.id).then(function (keys) {
+                    for (var i = 0; i < keys.length; ++i) {
+                        // TODO: getGrantedPermissionsToMe only returns a list of entries
+                        // that have been granted to the client, but we do not know the
+                        // corresponding AccessRight
+                        grantFields.set(keys[i], Permissions_1.AccessRight.R);
+                    }
+                    _this.dataRequestManager.grantAccessForClient(serviceInfo.id, grantFields).then(function () {
+                        return resolve(true);
+                    });
                 });
             });
         }).then(function (valid) {
