@@ -53,7 +53,7 @@ import { OfferShareDataRepository } from './repository/offer/OfferShareDataRepos
 import OfferShareDataRepositoryImpl from './repository/offer/OfferShareDataRepositoryImpl';
 import { SubscriptionManager } from './manager/SubscriptionManager';
 import { SubscriptionManagerImpl } from './manager/SubscriptionManagerImpl';
-import ServiceImpl from './repository/service/ServiceImpl';
+import GeneralService from './repository/service/GeneralService';
 import SubscriptionPointer from './repository/service/SubscriptionPointer';
 import ServiceType from './repository/service/ServiceType';
 
@@ -96,7 +96,7 @@ export {
     WalletManagerImpl,
     SubscriptionManager,
     SubscriptionManagerImpl,
-    ServiceImpl,
+    GeneralService,
     ServiceType,
     SubscriptionPointer,
     Offer,

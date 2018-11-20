@@ -3,7 +3,7 @@ import Account from '../../src/repository/models/Account';
 import DataRequest from '../../src/repository/models/DataRequest';
 import { AccessRight } from '../../src/utils/keypair/Permissions';
 import { ServiceInfo, Service } from '../../src/repository/service/Service';
-import ServiceImpl from '../../src/repository/service/ServiceImpl';
+import GeneralService from '../../src/repository/service/GeneralService';
 import { SubscriptionManagerImpl } from '../../src/manager/SubscriptionManagerImpl';
 import ServiceType from '../../src/repository/service/ServiceType';
 
@@ -41,7 +41,7 @@ describe('Base SubscriptionManager Test', async () => {
             'provide service provider id lookup service',
             [SubscriptionManagerImpl.KEY_SERVICE_INFO]
         );
-        nameService = new ServiceImpl(
+        nameService = new GeneralService(
             nameServiceInfo,
             baseNameService.profileManager,
             baseNameService.dataRequestManager
@@ -53,7 +53,7 @@ describe('Base SubscriptionManager Test', async () => {
             'provide gpa certification service',
             ['courses']
         );
-        gpaService = new ServiceImpl(
+        gpaService = new GeneralService(
             gpaServiceInfo,
             baseGPAService.profileManager,
             baseGPAService.dataRequestManager
@@ -72,7 +72,7 @@ describe('Base SubscriptionManager Test', async () => {
             res.should.be.equal(true);
             // gpa service verify if its subscription to the name service succeed
             const record: string = await baseGPAService.subscriptionManager.getProcessedData(accNameService.publicKey);
-            record.should.be.equal(ServiceImpl.SUBSCRIPTION_PROCESSING);
+            record.should.be.equal(ServiceInfo.SUBSCRIPTION_PROCESSING);
             // Check whether a pointer entry is added into gpa service's own storage
             const data: Map<string, string> = await baseGPAService.profileManager.getData();
             data.has(nameServiceInfo.type).should.be.equal(true);

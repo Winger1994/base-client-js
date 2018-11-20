@@ -5,8 +5,7 @@ import { DataRequestManager } from '../../manager/DataRequestManager';
 
 export default class ServiceImpl implements Service {
 
-    public static SUBSCRIPTION_PROCESSING: string = 'processing';
-    public static SUBSCRIPTION_DENY: string = 'deny';
+    
 
     private subscribers: Set<string>;
     private profileManager: ProfileManager;
@@ -38,7 +37,7 @@ export default class ServiceImpl implements Service {
             // TODO: add deny logic
             this.subscribers.add(uid);
             const updates: Map<string, string> = new Map();
-            updates.set(uid, ServiceImpl.SUBSCRIPTION_PROCESSING);
+            updates.set(uid, ServiceInfo.SUBSCRIPTION_PROCESSING);
             await this.profileManager.updateData(updates);
             const grantFields: Map<string, AccessRight> = new Map();
             // Load all previously granted permissions
@@ -54,7 +53,7 @@ export default class ServiceImpl implements Service {
     public async removeSubscriber(uid: string) {
         // TODO: In the current implementation, remove operation
         // is done by set "deny" into the data entry
-        this.updateData(uid, ServiceImpl.SUBSCRIPTION_DENY);
+        this.updateData(uid, ServiceInfo.SUBSCRIPTION_DENY);
     }
 
     public async updateData(uid: string, data: string) {

@@ -10,6 +10,8 @@ interface Service {
 }
 
 class ServiceInfo {
+    public static SUBSCRIPTION_PROCESSING: string = 'processing';
+    public static SUBSCRIPTION_DENY: string = 'deny';
     public type: string;
     public id: string;
     public description: string;
