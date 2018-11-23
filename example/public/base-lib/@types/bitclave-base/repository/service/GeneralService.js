@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var Service_1 = require("./Service");
 var Permissions_1 = require("../../utils/keypair/Permissions");
 var ServiceImpl = /** @class */ (function () {
     function ServiceImpl(serviceInfo, profileManager, dataRequestManager) {
@@ -68,7 +69,7 @@ var ServiceImpl = /** @class */ (function () {
                         // TODO: add deny logic
                         this.subscribers.add(uid);
                         updates = new Map();
-                        updates.set(uid, ServiceImpl.SUBSCRIPTION_PROCESSING);
+                        updates.set(uid, Service_1.ServiceInfo.SUBSCRIPTION_PROCESSING);
                         return [4 /*yield*/, this.profileManager.updateData(updates)];
                     case 1:
                         _a.sent();
@@ -94,7 +95,7 @@ var ServiceImpl = /** @class */ (function () {
             return __generator(this, function (_a) {
                 // TODO: In the current implementation, remove operation
                 // is done by set "deny" into the data entry
-                this.updateData(uid, ServiceImpl.SUBSCRIPTION_DENY);
+                this.updateData(uid, Service_1.ServiceInfo.SUBSCRIPTION_DENY);
                 return [2 /*return*/];
             });
         });
@@ -117,9 +118,7 @@ var ServiceImpl = /** @class */ (function () {
             });
         });
     };
-    ServiceImpl.SUBSCRIPTION_PROCESSING = 'processing';
-    ServiceImpl.SUBSCRIPTION_DENY = 'deny';
     return ServiceImpl;
 }());
 exports.default = ServiceImpl;
-//# sourceMappingURL=ServiceImpl.js.map
+//# sourceMappingURL=GeneralService.js.map

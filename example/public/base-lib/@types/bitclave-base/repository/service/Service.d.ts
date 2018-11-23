@@ -9,6 +9,8 @@ interface Service {
     updateData(uid: string, data: string): void;
 }
 declare class ServiceInfo {
+    static SUBSCRIPTION_PROCESSING: string;
+    static SUBSCRIPTION_DENY: string;
     type: string;
     id: string;
     description: string;

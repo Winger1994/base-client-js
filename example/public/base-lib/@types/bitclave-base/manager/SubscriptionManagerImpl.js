@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var Account_1 = require("../repository/models/Account");
-var ServiceImpl_1 = require("../repository/service/ServiceImpl");
+var Service_1 = require("../repository/service/Service");
 var Permissions_1 = require("../utils/keypair/Permissions");
 var SubscriptionPointer_1 = require("../repository/service/SubscriptionPointer");
 var SubscriptionManagerImpl = /** @class */ (function () {
@@ -179,7 +179,7 @@ var SubscriptionManagerImpl = /** @class */ (function () {
                                     res = _a.sent();
                                     data = res.get(this.account.publicKey);
                                     if (!(data !== undefined)) return [3 /*break*/, 4];
-                                    if (!(data === ServiceImpl_1.default.SUBSCRIPTION_DENY)) return [3 /*break*/, 2];
+                                    if (!(data === Service_1.ServiceInfo.SUBSCRIPTION_DENY)) return [3 /*break*/, 2];
                                     resolve(false);
                                     clearTimeout(timer_1);
                                     return [3 /*break*/, 4];

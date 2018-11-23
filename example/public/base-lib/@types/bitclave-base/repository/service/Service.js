@@ -7,6 +7,8 @@ var ServiceInfo = /** @class */ (function () {
         this.description = description;
         this.requiredKeys = requiredKeys;
     }
+    ServiceInfo.SUBSCRIPTION_PROCESSING = 'processing';
+    ServiceInfo.SUBSCRIPTION_DENY = 'deny';
     return ServiceInfo;
 }());
 exports.ServiceInfo = ServiceInfo;

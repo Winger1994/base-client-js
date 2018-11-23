@@ -5,8 +5,6 @@ import { DataRequestManager } from '../../manager/DataRequestManager';
 
 export default class ServiceImpl implements Service {
 
-    
-
     private subscribers: Set<string>;
     private profileManager: ProfileManager;
     private dataRequestManager: DataRequestManager;
