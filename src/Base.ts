@@ -79,6 +79,7 @@ export { AcceptedField } from './utils/keypair/AcceptedField';
 export { RpcToken } from './utils/keypair/rpc/RpcToken';
 export { RpcAuth } from './utils/keypair/rpc/RpcAuth';
 export { Service, ServiceInfo } from './repository/service/Service';
+export { TokenPointer } from './repository/offer/TokenPointer';
 
 export {
     BaseAddrPair,
