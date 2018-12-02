@@ -56,6 +56,9 @@ import { SubscriptionManagerImpl } from './manager/SubscriptionManagerImpl';
 import GeneralService from './repository/service/GeneralService';
 import SubscriptionPointer from './repository/service/SubscriptionPointer';
 import ServiceType from './repository/service/ServiceType';
+import { ShareDataRepository } from './repository/offer/ShareDataRepository';
+import ShareDataRepositoryImpl from './repository/offer/ShareDataRepositoryImpl';
+
 
 export { RepositoryStrategyType } from './repository/RepositoryStrategyType';
 export { CompareAction } from './repository/models/CompareAction';
@@ -111,7 +114,9 @@ export {
     OfferShareDataRepositoryImpl,
     OfferSearchRepository,
     OfferSearchRepositoryImpl,
-    HttpTransportImpl
+    HttpTransportImpl,
+    ShareDataRepository,
+    ShareDataRepositoryImpl,
 };
 
 export default class Base {

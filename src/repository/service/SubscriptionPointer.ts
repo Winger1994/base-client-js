@@ -16,4 +16,13 @@ export default class SubscriptionPointer {
         this.spid = spid;
         this.schema = SubscriptionPointer.UID + SubscriptionPointer.SEP + SubscriptionPointer.BID + SubscriptionPointer.SEP + serviceType;
     }
+
+    public static conform(value: string): boolean {
+        const obj: SubscriptionPointer = JSON.parse(value);
+        // TODO: assume other value won't contain schema and spid fields
+        if (obj.schema !== undefined && obj.spid !== undefined) {
+            return true;
+        }
+        return false;
+    }
 }

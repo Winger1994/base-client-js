@@ -11,4 +11,5 @@ export default class SubscriptionPointer {
     spid: string;
     schema: string;
     constructor(spid: string, serviceType: string);
+    static conform(value: string): boolean;
 }

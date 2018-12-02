@@ -10,6 +10,14 @@ var SubscriptionPointer = /** @class */ (function () {
         this.spid = spid;
         this.schema = SubscriptionPointer.UID + SubscriptionPointer.SEP + SubscriptionPointer.BID + SubscriptionPointer.SEP + serviceType;
     }
+    SubscriptionPointer.conform = function (value) {
+        var obj = JSON.parse(value);
+        // TODO: assume other value won't contain schema and spid fields
+        if (obj.schema !== undefined && obj.spid !== undefined) {
+            return true;
+        }
+        return false;
+    };
     SubscriptionPointer.SEP = '_';
     SubscriptionPointer.SPID = 'spid';
     SubscriptionPointer.UID = 'uid';
