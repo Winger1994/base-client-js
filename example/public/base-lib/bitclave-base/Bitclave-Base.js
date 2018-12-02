@@ -13052,10 +13052,15 @@ var SubscriptionPointer = /** @class */ (function () {
         this.schema = SubscriptionPointer.UID + SubscriptionPointer.SEP + SubscriptionPointer.BID + SubscriptionPointer.SEP + serviceType;
     }
     SubscriptionPointer.conform = function (value) {
-        var obj = JSON.parse(value);
-        // TODO: assume other value won't contain schema and spid fields
-        if (obj.schema !== undefined && obj.spid !== undefined) {
-            return true;
+        try {
+            var obj = JSON.parse(value);
+            // TODO: assume other value won't contain schema and spid fields
+            if (obj.schema !== undefined && obj.spid !== undefined) {
+                return true;
+            }
+        }
+        catch (e) {
+            return false;
         }
         return false;
     };
@@ -26698,9 +26703,14 @@ var TokenPointer = /** @class */ (function () {
         return key.split(this.SEP)[1];
     };
     TokenPointer.conform = function (value) {
-        var obj = JSON.parse(value);
-        if (obj.token !== undefined && obj.signature !== undefined) {
-            return Token.conform(obj.token);
+        try {
+            var obj = JSON.parse(value);
+            if (obj.token !== undefined && obj.signature !== undefined) {
+                return Token.conform(obj.token);
+            }
+        }
+        catch (e) {
+            return false;
         }
         return false;
     };

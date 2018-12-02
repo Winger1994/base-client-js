@@ -18,10 +18,14 @@ export default class SubscriptionPointer {
     }
 
     public static conform(value: string): boolean {
-        const obj: SubscriptionPointer = JSON.parse(value);
-        // TODO: assume other value won't contain schema and spid fields
-        if (obj.schema !== undefined && obj.spid !== undefined) {
-            return true;
+        try {
+            const obj: SubscriptionPointer = JSON.parse(value);
+            // TODO: assume other value won't contain schema and spid fields
+            if (obj.schema !== undefined && obj.spid !== undefined) {
+                return true;
+            }
+        } catch (e) {
+            return false;
         }
         return false;
     }

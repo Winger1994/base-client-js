@@ -11,10 +11,15 @@ var SubscriptionPointer = /** @class */ (function () {
         this.schema = SubscriptionPointer.UID + SubscriptionPointer.SEP + SubscriptionPointer.BID + SubscriptionPointer.SEP + serviceType;
     }
     SubscriptionPointer.conform = function (value) {
-        var obj = JSON.parse(value);
-        // TODO: assume other value won't contain schema and spid fields
-        if (obj.schema !== undefined && obj.spid !== undefined) {
-            return true;
+        try {
+            var obj = JSON.parse(value);
+            // TODO: assume other value won't contain schema and spid fields
+            if (obj.schema !== undefined && obj.spid !== undefined) {
+                return true;
+            }
+        }
+        catch (e) {
+            return false;
         }
         return false;
     };

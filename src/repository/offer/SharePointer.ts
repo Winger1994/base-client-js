@@ -15,6 +15,5 @@ export default class SharePointer {
         return uid + this.SEP + bid;
     }
 
-    // TODO: a helper function to verify the signature and data hash
 
 }

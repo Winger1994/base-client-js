@@ -15,9 +15,14 @@ var TokenPointer = /** @class */ (function () {
         return key.split(this.SEP)[1];
     };
     TokenPointer.conform = function (value) {
-        var obj = JSON.parse(value);
-        if (obj.token !== undefined && obj.signature !== undefined) {
-            return Token.conform(obj.token);
+        try {
+            var obj = JSON.parse(value);
+            if (obj.token !== undefined && obj.signature !== undefined) {
+                return Token.conform(obj.token);
+            }
+        }
+        catch (e) {
+            return false;
         }
         return false;
     };

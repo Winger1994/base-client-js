@@ -22,9 +22,13 @@ class TokenPointer {
     }
 
     public static conform(value: string): boolean {
-        const obj: TokenPointer = JSON.parse(value);
-        if (obj.token !== undefined && obj.signature !== undefined) {
-            return Token.conform(obj.token);
+        try {
+            const obj: TokenPointer = JSON.parse(value);
+            if (obj.token !== undefined && obj.signature !== undefined) {
+                return Token.conform(obj.token);
+            }
+        } catch(e) {
+            return false;
         }
         return false;
     }
