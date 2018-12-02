@@ -1,7 +1,7 @@
 import { Service, ServiceInfo } from './Service';
 import { ProfileManager } from '../../manager/ProfileManager';
 import { DataRequestManager } from '../../manager/DataRequestManager';
-export default class ServiceImpl implements Service {
+export default class GeneralService implements Service {
     private subscribers;
     private profileManager;
     private dataRequestManager;

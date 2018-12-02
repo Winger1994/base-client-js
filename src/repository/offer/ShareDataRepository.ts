@@ -36,4 +36,13 @@ export interface ShareDataRepository {
      * @param uid 
      */
     shareWithBusiness(key: string, value: string, uid: string): Promise<boolean>;
+
+    /**
+     * Check at the service provider side that whether this is the first time
+     * receive the TokenPointer granted by users by checking whether the corresponding
+     * SharePointer exist
+     * @param uid 
+     * @param bid 
+     */
+    isSharePointerExist(uid: string, bid: string): Promise<boolean>;
 }

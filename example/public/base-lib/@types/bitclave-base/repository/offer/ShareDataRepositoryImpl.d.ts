@@ -13,6 +13,7 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
     grantAccessForOffer(offerSearchId: number, offerOwner: string, acceptedFields: Map<string, AccessRight>, priceId: number, clientId: string): Promise<boolean>;
     acceptShareData(data: Map<string, string>, uid: string, bid: string, searchId: number, worth: string): Promise<Map<string, string>>;
     shareWithBusiness(key: string, value: string, uid: string): Promise<boolean>;
+    isSharePointerExist(uid: string, bid: string): Promise<boolean>;
     /**
      * Check whether all the keys are granted.
      * @param from

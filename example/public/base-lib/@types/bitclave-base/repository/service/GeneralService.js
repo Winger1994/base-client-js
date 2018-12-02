@@ -37,24 +37,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Service_1 = require("./Service");
 var Permissions_1 = require("../../utils/keypair/Permissions");
-var ServiceImpl = /** @class */ (function () {
-    function ServiceImpl(serviceInfo, profileManager, dataRequestManager) {
+var GeneralService = /** @class */ (function () {
+    function GeneralService(serviceInfo, profileManager, dataRequestManager) {
         this.profileManager = profileManager;
         this.dataRequestManager = dataRequestManager;
         this._serviceInfo = serviceInfo;
         this.subscribers = new Set();
     }
-    Object.defineProperty(ServiceImpl.prototype, "serviceInfo", {
+    Object.defineProperty(GeneralService.prototype, "serviceInfo", {
         get: function () {
             return this._serviceInfo;
         },
         enumerable: true,
         configurable: true
     });
-    ServiceImpl.prototype.toJsonString = function () {
+    GeneralService.prototype.toJsonString = function () {
         return JSON.stringify(this._serviceInfo);
     };
-    ServiceImpl.prototype.addSubscriber = function (uid) {
+    GeneralService.prototype.addSubscriber = function (uid) {
         return __awaiter(this, void 0, void 0, function () {
             var updates, grantFields, keys, i;
             return __generator(this, function (_a) {
@@ -90,7 +90,7 @@ var ServiceImpl = /** @class */ (function () {
             });
         });
     };
-    ServiceImpl.prototype.removeSubscriber = function (uid) {
+    GeneralService.prototype.removeSubscriber = function (uid) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 // TODO: In the current implementation, remove operation
@@ -100,7 +100,7 @@ var ServiceImpl = /** @class */ (function () {
             });
         });
     };
-    ServiceImpl.prototype.updateData = function (uid, data) {
+    GeneralService.prototype.updateData = function (uid, data) {
         return __awaiter(this, void 0, void 0, function () {
             var updates;
             return __generator(this, function (_a) {
@@ -118,7 +118,7 @@ var ServiceImpl = /** @class */ (function () {
             });
         });
     };
-    return ServiceImpl;
+    return GeneralService;
 }());
-exports.default = ServiceImpl;
+exports.default = GeneralService;
 //# sourceMappingURL=GeneralService.js.map

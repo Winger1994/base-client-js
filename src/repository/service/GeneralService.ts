@@ -3,7 +3,7 @@ import { AccessRight } from '../../utils/keypair/Permissions';
 import { ProfileManager } from '../../manager/ProfileManager';
 import { DataRequestManager } from '../../manager/DataRequestManager';
 
-export default class ServiceImpl implements Service {
+export default class GeneralService implements Service {
 
     private subscribers: Set<string>;
     private profileManager: ProfileManager;
