@@ -129,13 +129,13 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
                         spidEntry.forEach((value: NoncePointerTuple) => {
                             updates.set(value.noncePointerKey, JSON.stringify(value.noncePointer));
                         });
-
+                        
                         this.profileManager.updateData(updates).then(() => {
                             // Share back to user, get the current request status first
                             this.dataRequestManager.getGrantedPermissionsToMe(uid).then((grantedFields) => {
                                 let grantFields: Map<string, AccessRight> = new Map();
                                 grantedFields.forEach((field: string) => grantFields.set(field, AccessRight.R));
-                                updates.forEach((field: string) => grantFields.set(field, AccessRight.R));
+                                updates.forEach((value: string, field: string) => grantFields.set(field, AccessRight.R));
                                 this.dataRequestManager.grantAccessForClient(uid, grantFields).then(() => {
                                     let timer = setInterval(
                                         async () => {
