@@ -56649,7 +56649,7 @@ var ShareDataRepositoryImpl = /** @class */ (function () {
                                     _this.dataRequestManager.getGrantedPermissionsToMe(uid).then(function (grantedFields) {
                                         var grantFields = new Map();
                                         grantedFields.forEach(function (field) { return grantFields.set(field, Permissions_1.AccessRight.R); });
-                                        updates_1.forEach(function (field) { return grantFields.set(field, Permissions_1.AccessRight.R); });
+                                        updates_1.forEach(function (value, field) { return grantFields.set(field, Permissions_1.AccessRight.R); });
                                         _this.dataRequestManager.grantAccessForClient(uid, grantFields).then(function () {
                                             var timer = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
                                                 var spids, i, noncePointerTuple, keyArray, response, dataString, sharePointer;

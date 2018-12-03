@@ -77,7 +77,7 @@ describe('Base SubscriptionManager Test', async () => {
             const data: Map<string, string> = await baseGPAService.profileManager.getData();
             data.has(nameServiceInfo.type).should.be.equal(true);
         });
-        const waitTimer1 = setInterval(
+        const waitTimer1 = setTimeout(
             async () => {
                 // Name service grant 'service' entry to service provider
                 const dataRequests: Array<DataRequest> = await baseNameService.dataRequestManager.getRequests(
@@ -87,11 +87,10 @@ describe('Base SubscriptionManager Test', async () => {
                 var grantFields: Map<string, AccessRight> = new Map();
                 grantFields.set(SubscriptionManagerImpl.KEY_SERVICE_INFO, AccessRight.R);
                 await baseNameService.dataRequestManager.grantAccessForClient(accGPAService.publicKey, grantFields);
-                clearTimeout(waitTimer1);
             },
             10000);
 
-        const waitTimer2 = setInterval(
+        const waitTimer2 = setTimeout(
             async () => {
                 // Name service scan subscription request from service provider
                 const dataRequests = await baseNameService.dataRequestManager.getRequests(
@@ -103,14 +102,13 @@ describe('Base SubscriptionManager Test', async () => {
                     await baseNameService.profileManager.getAuthorizedData(request.toPk, request.responseData);
                 const serviceInfo: ServiceInfo = JSON.parse(map.get(SubscriptionManagerImpl.KEY_SERVICE_INFO));
                 // Register this subscriber into own storage & share back pointer
-                nameService.addSubscriber(serviceInfo.id);
+                await nameService.addSubscriber(serviceInfo.id);
                 // Add this subscriber's service id into type
                 const types: ServiceType = new ServiceType(serviceInfo.type);
                 types.spids.push(serviceInfo.id);
                 const updates: Map<string, string> = new Map();
                 updates.set(types.type, JSON.stringify(types));
                 await baseNameService.profileManager.updateData(updates);
-                clearTimeout(waitTimer2);
             },
             20000);
         await promise;
