@@ -9,6 +9,10 @@ import SharePointer from './SharePointer';
 import { TokenPointer, Token } from './TokenPointer';
 import { OfferShareDataRepository } from './OfferShareDataRepository';
 
+// var Web3 = require('web3');
+// var fs = require('fs');
+
+
 // An helper data structure used at the business side to keep track
 // of the data field that need to be fetched from service provider
 class NoncePointerTuple {
@@ -30,16 +34,31 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
     private dataRequestManager: DataRequestManager;
     private profileManager: ProfileManager;
     private offerShareDataRepository: OfferShareDataRepository;
+    // private contract: any;
     private static min: number = 1;
     private static max: number = 0x7FFFFFFF;
+
+    
 
     constructor(
         dataRequestManager: DataRequestManager,
         profileManager: ProfileManager,
         offerShareDataRepository: OfferShareDataRepository) {
+        //web3: any,
+        //contractAddress: string) {
         this.dataRequestManager = dataRequestManager;
         this.profileManager = profileManager;
         this.offerShareDataRepository = offerShareDataRepository;
+        // const jsonFile = './Purchase.json';
+        // const parsed = JSON.parse(fs.readFileSync(jsonFile));
+        // TODO: set the gasPrice and gas limit here
+        // this.contract = new web3.eth.Contract(parsed.abi, contractAddress, {
+        //     from: contractAddress,
+        //     gasPrice: '20000000000',
+        //     gas: 1000000,
+        // });
+        // this.contract.setProvider(web3.currentProvider);
+
     }
 
     public async grantAccessForOffer(
@@ -80,11 +99,11 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
                                     if (entries.size == keys.length) {
                                         // Business is ready, client tell each service provider to share data
                                         // with business by creating & sharing data entries
-                                        entries.forEach(async (value: string, key: string) => {
-                                            // Here the key will be a tuple of uid and spid, value will be
-                                            // a business generated nonce.
-                                            await this.notifyServiceProvider(value, key, offerOwner);
-                                        });
+                                        for(let entry of entries.entries()) {
+                                        // Here the key will be a tuple of uid and spid, value will be
+                                        // a business generated nonce.
+                                            await this.notifyServiceProvider(entry[1], entry[0], offerOwner);
+                                        }
                                         resolve(true);
                                         clearTimeout(timer);
                                     }
@@ -129,7 +148,7 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
                         spidEntry.forEach((value: NoncePointerTuple) => {
                             updates.set(value.noncePointerKey, JSON.stringify(value.noncePointer));
                         });
-                        
+
                         this.profileManager.updateData(updates).then(() => {
                             // Share back to user, get the current request status first
                             this.dataRequestManager.getGrantedPermissionsToMe(uid).then((grantedFields) => {
@@ -231,9 +250,9 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
         const sharePointerKey: string = SharePointer.generateKey(uid, bid);
         return new Promise<boolean>((resolve) => {
             this.profileManager.getData()
-            .then((data) => {
-                resolve(data.get(sharePointerKey) ? true : false);
-            });
+                .then((data) => {
+                    resolve(data.get(sharePointerKey) ? true : false);
+                });
         });
     }
 

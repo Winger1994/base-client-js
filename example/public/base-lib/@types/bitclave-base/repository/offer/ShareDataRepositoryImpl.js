@@ -34,12 +34,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __values = (this && this.__values) || function (o) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
+    if (m) return m.call(o);
+    return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var Permissions_1 = require("../../utils/keypair/Permissions");
 var NoncePointer_1 = require("./NoncePointer");
 var SubscriptionPointer_1 = require("../service/SubscriptionPointer");
 var SharePointer_1 = require("./SharePointer");
 var TokenPointer_1 = require("./TokenPointer");
+// var Web3 = require('web3');
+// var fs = require('fs');
 // An helper data structure used at the business side to keep track
 // of the data field that need to be fetched from service provider
 var NoncePointerTuple = /** @class */ (function () {
@@ -53,9 +65,20 @@ var NoncePointerTuple = /** @class */ (function () {
 }());
 var ShareDataRepositoryImpl = /** @class */ (function () {
     function ShareDataRepositoryImpl(dataRequestManager, profileManager, offerShareDataRepository) {
+        //web3: any,
+        //contractAddress: string) {
         this.dataRequestManager = dataRequestManager;
         this.profileManager = profileManager;
         this.offerShareDataRepository = offerShareDataRepository;
+        // const jsonFile = './Purchase.json';
+        // const parsed = JSON.parse(fs.readFileSync(jsonFile));
+        // TODO: set the gasPrice and gas limit here
+        // this.contract = new web3.eth.Contract(parsed.abi, contractAddress, {
+        //     from: contractAddress,
+        //     gasPrice: '20000000000',
+        //     gas: 1000000,
+        // });
+        // this.contract.setProvider(web3.currentProvider);
     }
     ShareDataRepositoryImpl.prototype.grantAccessForOffer = function (offerSearchId, offerOwner, acceptedFields, priceId, clientId) {
         return __awaiter(this, void 0, void 0, function () {
@@ -84,35 +107,48 @@ var ShareDataRepositoryImpl = /** @class */ (function () {
                                 // share the data with business
                                 return new Promise(function (resolve) {
                                     var timer = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
-                                        var entries;
-                                        var _this = this;
-                                        return __generator(this, function (_a) {
-                                            switch (_a.label) {
+                                        var e_1, _a, entries, _b, _c, entry, e_1_1;
+                                        return __generator(this, function (_d) {
+                                            switch (_d.label) {
                                                 case 0: return [4 /*yield*/, this.checkRequestStatus(clientId, offerOwner, keys)];
                                                 case 1:
-                                                    entries = _a.sent();
-                                                    if (entries.size == keys.length) {
-                                                        // Business is ready, client tell each service provider to share data
-                                                        // with business by creating & sharing data entries
-                                                        entries.forEach(function (value, key) { return __awaiter(_this, void 0, void 0, function () {
-                                                            return __generator(this, function (_a) {
-                                                                switch (_a.label) {
-                                                                    case 0: 
-                                                                    // Here the key will be a tuple of uid and spid, value will be
-                                                                    // a business generated nonce.
-                                                                    return [4 /*yield*/, this.notifyServiceProvider(value, key, offerOwner)];
-                                                                    case 1:
-                                                                        // Here the key will be a tuple of uid and spid, value will be
-                                                                        // a business generated nonce.
-                                                                        _a.sent();
-                                                                        return [2 /*return*/];
-                                                                }
-                                                            });
-                                                        }); });
-                                                        resolve(true);
-                                                        clearTimeout(timer);
+                                                    entries = _d.sent();
+                                                    if (!(entries.size == keys.length)) return [3 /*break*/, 10];
+                                                    _d.label = 2;
+                                                case 2:
+                                                    _d.trys.push([2, 7, 8, 9]);
+                                                    _b = __values(entries.entries()), _c = _b.next();
+                                                    _d.label = 3;
+                                                case 3:
+                                                    if (!!_c.done) return [3 /*break*/, 6];
+                                                    entry = _c.value;
+                                                    // Here the key will be a tuple of uid and spid, value will be
+                                                    // a business generated nonce.
+                                                    return [4 /*yield*/, this.notifyServiceProvider(entry[1], entry[0], offerOwner)];
+                                                case 4:
+                                                    // Here the key will be a tuple of uid and spid, value will be
+                                                    // a business generated nonce.
+                                                    _d.sent();
+                                                    _d.label = 5;
+                                                case 5:
+                                                    _c = _b.next();
+                                                    return [3 /*break*/, 3];
+                                                case 6: return [3 /*break*/, 9];
+                                                case 7:
+                                                    e_1_1 = _d.sent();
+                                                    e_1 = { error: e_1_1 };
+                                                    return [3 /*break*/, 9];
+                                                case 8:
+                                                    try {
+                                                        if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
                                                     }
-                                                    return [2 /*return*/];
+                                                    finally { if (e_1) throw e_1.error; }
+                                                    return [7 /*endfinally*/];
+                                                case 9:
+                                                    resolve(true);
+                                                    clearTimeout(timer);
+                                                    _d.label = 10;
+                                                case 10: return [2 /*return*/];
                                             }
                                         });
                                     }); }, 10000);
@@ -441,6 +477,7 @@ var ShareDataRepositoryImpl = /** @class */ (function () {
     ShareDataRepositoryImpl.prototype.getRandomInt = function () {
         return Math.floor(Math.random() * (ShareDataRepositoryImpl.max - ShareDataRepositoryImpl.min + 1)) + ShareDataRepositoryImpl.min;
     };
+    // private contract: any;
     ShareDataRepositoryImpl.min = 1;
     ShareDataRepositoryImpl.max = 0x7FFFFFFF;
     return ShareDataRepositoryImpl;

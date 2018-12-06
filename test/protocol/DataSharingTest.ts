@@ -155,7 +155,7 @@ describe('Data sharing test between user, service provider and business', async 
         const acceptedFields = onePrice.getFieldsForAcception(AccessRight.R);
         // User Grant permission for offer
         console.log('user grant permission for offer');
-        const promise = shareDataRepoUser.grantAccessForOffer(searchResult.id, accBusiness.publicKey, acceptedFields, onePrice.id, accUser.publicKey).then(async (status) => {
+        const userPromise = shareDataRepoUser.grantAccessForOffer(searchResult.id, accBusiness.publicKey, acceptedFields, onePrice.id, accUser.publicKey).then(async (status) => {
             status.should.be.equal(true);
             // Check the TokenPointer is written into the storage
             const tokenPointerKey: string = TokenPointer.generateKey(accBusiness.publicKey, accService.publicKey);
@@ -163,6 +163,8 @@ describe('Data sharing test between user, service provider and business', async 
             data.has(tokenPointerKey).should.be.equal(true);
             console.log(data.get(tokenPointerKey));
         });
+        let businessPromise;
+        let servicePromise;
         setTimeout(
             async () => {
                 // Get all granted but not yet accepted offer
@@ -175,12 +177,13 @@ describe('Data sharing test between user, service provider and business', async 
                 const dataFields: Map<string, string> = await baseBusiness.profileManager.getAuthorizedData(offerShareData.clientId, offerShareData.clientResponse);
                 console.log('business get granted fields');
                 console.log(dataFields);
-                const promise = shareDataRepoBusiness.acceptShareData(dataFields, offerShareData.clientId, accBusiness.publicKey, offerShareData.offerSearchId, offerShareData.worth).then((data) => {
+                businessPromise = shareDataRepoBusiness.acceptShareData(dataFields, offerShareData.clientId, accBusiness.publicKey, offerShareData.offerSearchId, offerShareData.worth).then((data) => {
                     // Include the eth_wallets entry
                     data.size.should.be.equal(2);
                     data.get('gpa').should.be.equal('4.0');
+                    console.log('received data');
+                    console.log(data);
                 });
-                await promise;
             },
             5000);
         setTimeout(
@@ -196,7 +199,7 @@ describe('Data sharing test between user, service provider and business', async 
                 const value: string = data.get(tokenPointerKey);
                 const tokenPointer: TokenPointer = JSON.parse(value);
                 tokenPointer.token.bid.should.be.equal(accBusiness.publicKey);
-                const promise = shareDataRepoService.shareWithBusiness(tokenPointerKey, value, accUser.publicKey).then(async (status) => {
+                servicePromise = shareDataRepoService.shareWithBusiness(tokenPointerKey, value, accUser.publicKey).then(async (status) => {
                     // Check the SharePointer is written into the storage
                     status.should.be.equal(true);
                     const sharePointerKey: string = SharePointer.generateKey(accUser.publicKey, accBusiness.publicKey);
@@ -204,9 +207,10 @@ describe('Data sharing test between user, service provider and business', async 
                     data.has(sharePointerKey).should.be.equal(true);
                     console.log(data.get(sharePointerKey));
                 });
-                await promise;
             },
             60000);
-        await promise;
+        await userPromise;
+        await servicePromise;
+        await businessPromise;
     });
 });
