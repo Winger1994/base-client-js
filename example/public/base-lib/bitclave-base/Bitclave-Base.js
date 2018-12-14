@@ -25866,7 +25866,7 @@ module.exports = require("stream");
 /* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(__filename) {
+
 /**
  * Module dependencies.
  */
@@ -26038,7 +26038,6 @@ exports.getRoot = function getRoot (file) {
   }
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, "/index.js"))
 
 /***/ }),
 /* 228 */
@@ -56488,7 +56487,7 @@ exports.default = ServiceType;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(__dirname) {
+
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -57043,7 +57042,6 @@ var ShareDataRepositoryImpl = /** @class */ (function () {
 }());
 exports.default = ShareDataRepositoryImpl;
 
-/* WEBPACK VAR INJECTION */}.call(exports, "/"))
 
 /***/ }),
 /* 679 */
