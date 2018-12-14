@@ -27,13 +27,13 @@ describe('Data sharing test between user, service provider and business', async 
     const baseUser: Base = new Base(host, site);
     const baseService: Base = new Base(host, site);
     const baseBusiness: Base = new Base(host, site);
-    // TODO: configure the eth_wallets address of the three entities
-    const eth_wallets_user: string = '0xac318281e9b912849e3c3884bb9551e470af3d8f';
-    const eth_wallets_service: string = '0xab586dc48556f0d2d90a8a3d2ccbece2e036f6d9';
-    const eth_wallets_business: string = '0x93921eeff2aae976b4b0002d0a6884ca61fb9a2f';
+    // The eth_wallets address of the three entities
+    let eth_wallets_user: string;
+    let eth_wallets_service: string;
+    let eth_wallets_business: string;
     // TODO: two configurations
     const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-    const contractAddress: string = '0xdcc25e4313bddcea4e49b5bad444a9f4645e8d66';
+    const contractAddress: string = '0xa8acb15ac6b3658ce234feaa6903f1bc4706c43a';
 
     let accUser: Account;
     let accService: Account;
@@ -93,6 +93,11 @@ describe('Data sharing test between user, service provider and business', async 
         accBusiness = await baseBusiness.accountManager.authenticationByPassPhrase(passPhraseBusiness, sig);
         updates.set(WalletManagerImpl.DATA_KEY_ETH_WALLETS, eth_wallets_business);
         await baseBusiness.profileManager.updateData(updates);
+        const accounts = await web3.eth.getAccounts();
+        // Fetch the eth_wallet addresses
+        eth_wallets_user = accounts[0];
+        eth_wallets_service = accounts[1];
+        eth_wallets_business = accounts[2];
         shareDataRepoUser = new ShareDataRepositoryImpl(
             baseUser.dataRequestManager,
             baseUser.profileManager,

@@ -8,6 +8,7 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
     private profileManager;
     private offerShareDataRepository;
     private contract;
+    private web3;
     private eth_wallets;
     private static min;
     private static max;
