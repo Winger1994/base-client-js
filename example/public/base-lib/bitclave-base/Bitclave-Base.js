@@ -56677,6 +56677,8 @@ var ShareDataRepositoryImpl = /** @class */ (function () {
                                     case 2:
                                         if (!!_c.done) return [3 /*break*/, 12];
                                         entry = _c.value;
+                                        console.log('entry');
+                                        console.log(entry);
                                         if (entry[0] === WalletManagerImpl_1.WalletManagerImpl.DATA_KEY_ETH_WALLETS) {
                                             return [3 /*break*/, 11];
                                         }
