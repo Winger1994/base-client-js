@@ -8,10 +8,10 @@ import SubscriptionPointer from '../service/SubscriptionPointer';
 import SharePointer from './SharePointer';
 import { TokenPointer, Token } from './TokenPointer';
 import { OfferShareDataRepository } from './OfferShareDataRepository';
+import { WalletManagerImpl } from '../../manager/WalletManagerImpl';
 
-// var Web3 = require('web3');
-// var fs = require('fs');
-
+var fs = require('fs');
+const path = require('path');
 
 // An helper data structure used at the business side to keep track
 // of the data field that need to be fetched from service provider
@@ -34,31 +34,33 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
     private dataRequestManager: DataRequestManager;
     private profileManager: ProfileManager;
     private offerShareDataRepository: OfferShareDataRepository;
-    // private contract: any;
+    private contract: any;
+    private eth_wallets: string;
     private static min: number = 1;
     private static max: number = 0x7FFFFFFF;
-
-    
+    private static gwei: number = 1000000000;
+    private userShare: number = 1;
+    private spShare: number = 1;
 
     constructor(
         dataRequestManager: DataRequestManager,
         profileManager: ProfileManager,
-        offerShareDataRepository: OfferShareDataRepository) {
-        //web3: any,
-        //contractAddress: string) {
+        offerShareDataRepository: OfferShareDataRepository,
+        web3: any,
+        contractAddress: string,
+        eth_wallets: string) {
         this.dataRequestManager = dataRequestManager;
         this.profileManager = profileManager;
         this.offerShareDataRepository = offerShareDataRepository;
-        // const jsonFile = './Purchase.json';
-        // const parsed = JSON.parse(fs.readFileSync(jsonFile));
+        this.eth_wallets = eth_wallets;
+        const parsed = JSON.parse(fs.readFileSync(path.resolve(__dirname, "./Purchase.json")));
         // TODO: set the gasPrice and gas limit here
-        // this.contract = new web3.eth.Contract(parsed.abi, contractAddress, {
-        //     from: contractAddress,
-        //     gasPrice: '20000000000',
-        //     gas: 1000000,
-        // });
-        // this.contract.setProvider(web3.currentProvider);
-
+        this.contract = new web3.eth.Contract(parsed.abi, contractAddress, {
+            from: contractAddress,
+            gasPrice: '2000', // 2000 wei for the gas price
+            gas: 1000000,
+        });
+        this.contract.setProvider(web3.currentProvider);
     }
 
     public async grantAccessForOffer(
@@ -99,10 +101,10 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
                                     if (entries.size == keys.length) {
                                         // Business is ready, client tell each service provider to share data
                                         // with business by creating & sharing data entries
-                                        for(let entry of entries.entries()) {
-                                        // Here the key will be a tuple of uid and spid, value will be
-                                        // a business generated nonce.
-                                            await this.notifyServiceProvider(entry[1], entry[0], offerOwner);
+                                        for (let entry of entries.entries()) {
+                                            // Here the key will be a tuple of uid and spid, value will be
+                                            // a business generated nonce, and the transaction key
+                                            await this.notifyServiceProvider(entry[1], entry[0], offerOwner, this.eth_wallets);
                                         }
                                         resolve(true);
                                         clearTimeout(timer);
@@ -116,39 +118,53 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
     }
 
     public async acceptShareData(data: Map<string, string>, uid: string, bid: string, searchId: number, worth: string): Promise<Map<string, string>> {
-
+        // Return value
+        let resMap: Map<string, string> = new Map();
+        // Calculate the value of each reward share, the shared eth_wallets record is not included
+        const totalShare: number = (data.size - 1) * (this.userShare + this.spShare);
+        const shareValue: number = Math.floor(+worth * ShareDataRepositoryImpl.gwei / totalShare);
+        const transactionValue: number = shareValue * (this.userShare + this.spShare);
+        // Get the eth_wallets address of this user
+        const user_eth_wallets: any = data.get(WalletManagerImpl.DATA_KEY_ETH_WALLETS);
         return new Promise<Map<string, string>>((resolve) => {
-            // Return value
-            let resMap: Map<string, string> = new Map();
             this.offerShareDataRepository.acceptShareData(searchId, worth)
-                .then(() => {
+                .then(async () => {
                     let spidEntry: Map<string, NoncePointerTuple> = new Map();
                     // Parse all the shared fields and see which fields are generated by
                     // third-party service providers
-                    data.forEach((value: string, key: string) => {
-                        if (SubscriptionPointer.conform(value)) {
-                            const subscriptionPointer: SubscriptionPointer = JSON.parse(value);
+                    for (let entry of data.entries()) {
+                        if (entry[0] === WalletManagerImpl.DATA_KEY_ETH_WALLETS) {
+                            continue;
+                        }
+                        if (SubscriptionPointer.conform(entry[1])) {
+                            const subscriptionPointer: SubscriptionPointer = JSON.parse(entry[1]);
                             const spid: string = subscriptionPointer.spid;
+                            // Initialize a transaction between user, service provider and business
+                            const trans: any = await this.contract.methods.InitTransaction(this.userShare * shareValue, this.spShare * shareValue).send({ from: this.eth_wallets, value: transactionValue });
+                            const transactionKey: string = trans['events']['TransactionInited']['returnValues']['transKey'];
+                            await this.contract.methods.AssignUser(transactionKey, user_eth_wallets).send({ from: this.eth_wallets });
                             // TODO: the schema is not used here
                             spidEntry.set(spid, new NoncePointerTuple(
-                                key,
+                                entry[0],
                                 SharePointer.generateKey(uid, bid),
-                                new NoncePointer(this.getRandomInt()),
+                                new NoncePointer(this.getRandomInt(), transactionKey),
                                 NoncePointer.generateKey(uid, spid)));
                         } else {
                             // If the data shared is not generated by service provider (only between user and business), 
-                            // this single transaction is finished 
-                            // TODO: add smart contract operation here
-                            resMap.set(key, value);
-                            console.log("Confirm data is received with user");
+                            // this single transaction is finished
+                            resMap.set(entry[0], entry[1]);
+                            // Initialize a transaction between user and business
+                            const trans: any = await this.contract.methods.InitTransaction(transactionValue, 0).send({ from: this.eth_wallets, value: transactionValue });
+                            const transactionKey: string = trans['events']['TransactionInited']['returnValues']['transKey'];
+                            await this.contract.methods.AssignUser(transactionKey, user_eth_wallets).send({ from: this.eth_wallets });
+                            await this.contract.methods.BusinessConfirm(transactionKey).send({ from: this.eth_wallets });
                         }
-                    });
+                    }
                     if (spidEntry.size > 0) {
                         let updates: Map<string, string> = new Map();
                         spidEntry.forEach((value: NoncePointerTuple) => {
                             updates.set(value.noncePointerKey, JSON.stringify(value.noncePointer));
                         });
-
                         this.profileManager.updateData(updates).then(() => {
                             // Share back to user, get the current request status first
                             this.dataRequestManager.getGrantedPermissionsToMe(uid).then((grantedFields) => {
@@ -175,14 +191,12 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
                                                         // from spidKey
                                                         resMap.set(noncePointerTuple.userEntryKey, sharePointer.data);
                                                         spidEntry.delete(spids[i]);
-                                                        // TODO: smart contract operation, confirm data received
-                                                        console.log(`data received: ${spids[i]}`);
+                                                        await this.contract.methods.BusinessConfirm(noncePointerTuple.noncePointer.transactionKey).send({ from: this.eth_wallets });
                                                     }
                                                 }
                                             }
-                                            // TODO: Check if responses from all service provider has received
+                                            // Check if responses from all service provider has received
                                             if (spidEntry.size == 0) {
-                                                console.log('all data received');
                                                 resolve(resMap);
                                                 clearTimeout(timer);
                                             }
@@ -192,8 +206,6 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
                             });
                         });
                     } else {
-                        // TODO: add smart contract operation
-                        console.log("finished, pay user");
                         resolve(resMap);
                     }
                 })
@@ -204,14 +216,16 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
     public async shareWithBusiness(key: string, value: string, uid: string): Promise<boolean> {
         const tokenPointer: TokenPointer = JSON.parse(value);
         const bid: string = TokenPointer.getBID(key);
-        // Get data of this client generated by this service provider
+        const transactionKey: string = tokenPointer.token.transactionKey;
+        // Get the data of this client generated by this service provider
         return this.profileManager.getData()
             .then((entries) => {
-                return new Promise<boolean>((resolve) => {
+                return new Promise<boolean>(async (resolve) => {
                     const data: string | undefined = entries.get(uid);
                     if (data === undefined) {
                         resolve(false);
                     } else {
+                        await this.contract.methods.AssignSP(transactionKey, this.eth_wallets).send({ from: this.eth_wallets });
                         const sharePointer: SharePointer = new SharePointer(tokenPointer, data);
                         const key: string = SharePointer.generateKey(uid, bid);
                         const updates: Map<string, string> = new Map();
@@ -226,11 +240,11 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
                                         } else {
                                             // Grant this entry to business
                                             this.grantAccessForClientHelper(bid, key, AccessRight.R)
-                                                .then((res) => {
+                                                .then(async (res) => {
                                                     if (!res) {
                                                         resolve(false);
                                                     } else {
-                                                        // TODO: add smart contract operations here
+                                                        await this.contract.methods.SPConfirm(transactionKey).send({ from: this.eth_wallets });
                                                         resolve(true);
                                                     }
                                                 })
@@ -288,7 +302,7 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
      * @param key A tuple of the uid and spid
      * @param bid Id of the business to share the data
      */
-    private async notifyServiceProvider(value: string, key: string, bid: string): Promise<void> {
+    private async notifyServiceProvider(value: string, key: string, bid: string, eth_wallets: string): Promise<void> {
         const uid: string = NoncePointer.getUID(key);
         const spid: string = NoncePointer.getSPID(key);
         const noncePointer: NoncePointer = JSON.parse(value);
@@ -305,7 +319,7 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
             }
         }
         // Create & write TokenPointer into own storage
-        const token: Token = new Token(bid, noncePointer.nonce, dataHash, Date.now().toString());
+        const token: Token = new Token(bid, noncePointer.nonce, dataHash, Date.now().toString(), noncePointer.transactionKey);
         const tokenPointer: TokenPointer = new TokenPointer(
             token,
             await this.profileManager.signMessage(JSON.stringify(token)));
@@ -324,6 +338,8 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
         }
         grantFields.set(dataEntryKey, AccessRight.R);
         await this.dataRequestManager.grantAccessForClient(spid, grantFields);
+        // Confirm data has been sent
+        await this.contract.methods.UserConfirm(noncePointer.transactionKey).send({ from: eth_wallets });
     }
 
     private calculateHash(message: string): string {

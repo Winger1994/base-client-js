@@ -13,7 +13,8 @@ declare class Token {
     nonce: number;
     dataHash: string;
     timestamp: string;
-    constructor(bid: string, nonce: number, dataHash: string, timestamp: string);
+    transactionKey: string;
+    constructor(bid: string, nonce: number, dataHash: string, timestamp: string, transactionKey: string);
     static conform(obj: Token): boolean;
 }
 export { TokenPointer, Token };

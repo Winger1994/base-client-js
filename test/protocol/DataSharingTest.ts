@@ -14,6 +14,7 @@ import SharePointer from '../../src/repository/offer/SharePointer';
 const should = require('chai')
     .use(require('chai-as-promised'))
     .should();
+const Web3 = require('web3');
 
 const host = 'http://localhost:8080';
 const site = 'localhost';
@@ -26,6 +27,13 @@ describe('Data sharing test between user, service provider and business', async 
     const baseUser: Base = new Base(host, site);
     const baseService: Base = new Base(host, site);
     const baseBusiness: Base = new Base(host, site);
+    // TODO: configure the eth_wallets address of the three entities
+    const eth_wallets_user: string = '0xac318281e9b912849e3c3884bb9551e470af3d8f';
+    const eth_wallets_service: string = '0xab586dc48556f0d2d90a8a3d2ccbece2e036f6d9';
+    const eth_wallets_business: string = '0x93921eeff2aae976b4b0002d0a6884ca61fb9a2f';
+    // TODO: two configurations
+    const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+    const contractAddress: string = '0xdcc25e4313bddcea4e49b5bad444a9f4645e8d66';
 
     let accUser: Account;
     let accService: Account;
@@ -56,8 +64,9 @@ describe('Data sharing test between user, service provider and business', async 
         );
         offer.offerPrices = [
             new OfferPrice(
-                0, 'special price for individual with gpa 4.0', '1.5', [
+                0, 'special price for individual with gpa 4.0', '20', [
                     new OfferPriceRules(0, 'gpa', '4.0', CompareAction.EQUALLY),
+                    new OfferPriceRules(0, 'courses', 'data', CompareAction.EQUALLY)
                 ]
             )
         ];
@@ -72,24 +81,42 @@ describe('Data sharing test between user, service provider and business', async 
     }
 
     beforeEach(async () => {
+        let updates: Map<string, string> = new Map();
         accUser = await baseUser.accountManager.authenticationByPassPhrase(passPhraseUser, sig);
+        updates.set(WalletManagerImpl.DATA_KEY_ETH_WALLETS, eth_wallets_user);
+        await baseUser.profileManager.updateData(updates);
+
         accService = await baseService.accountManager.authenticationByPassPhrase(passPhraseService, sig);
+        updates.set(WalletManagerImpl.DATA_KEY_ETH_WALLETS, eth_wallets_service);
+        await baseService.profileManager.updateData(updates);
+
         accBusiness = await baseBusiness.accountManager.authenticationByPassPhrase(passPhraseBusiness, sig);
+        updates.set(WalletManagerImpl.DATA_KEY_ETH_WALLETS, eth_wallets_business);
+        await baseBusiness.profileManager.updateData(updates);
         shareDataRepoUser = new ShareDataRepositoryImpl(
             baseUser.dataRequestManager,
             baseUser.profileManager,
-            new OfferShareDataRepositoryImpl(new HttpTransportImpl(host), baseUser.accountManager, baseUser.profileManager)
+            new OfferShareDataRepositoryImpl(new HttpTransportImpl(host), baseUser.accountManager, baseUser.profileManager),
+            web3,
+            contractAddress,
+            eth_wallets_user
         );
         shareDataRepoService = new ShareDataRepositoryImpl(
             baseService.dataRequestManager,
             baseService.profileManager,
-            new OfferShareDataRepositoryImpl(new HttpTransportImpl(host), baseService.accountManager, baseService.profileManager)
+            new OfferShareDataRepositoryImpl(new HttpTransportImpl(host), baseService.accountManager, baseService.profileManager),
+            web3,
+            contractAddress,
+            eth_wallets_service    
         );
         offerShareDataRepoBusiness = new OfferShareDataRepositoryImpl(new HttpTransportImpl(host), baseBusiness.accountManager, baseBusiness.profileManager);
         shareDataRepoBusiness = new ShareDataRepositoryImpl(
             baseBusiness.dataRequestManager,
             baseBusiness.profileManager,
-            offerShareDataRepoBusiness
+            offerShareDataRepoBusiness,
+            web3,
+            contractAddress,
+            eth_wallets_business
         );
 
         serviceInfo = new ServiceInfo(
@@ -99,10 +126,6 @@ describe('Data sharing test between user, service provider and business', async 
             ['courses']
         );
         service = new GeneralService(serviceInfo, baseService.profileManager, baseService.dataRequestManager);
-        // User add a fake eth_wallets field into own storage 
-        let updates: Map<string, string> = new Map();
-        updates.set(WalletManagerImpl.DATA_KEY_ETH_WALLETS, 'fake');
-        await baseUser.profileManager.updateData(updates);
     });
 
     it('Announce service', async () => {
@@ -138,10 +161,8 @@ describe('Data sharing test between user, service provider and business', async 
     it('Business create offer & user create search request, match and grant permission', async () => {
         // Business create offer
         const offer = offerFactory();
-        console.log('before create offer');
         const businessOffer = await baseBusiness.offerManager.saveOffer(offer);
         businessOffer.id.should.exist;
-        console.log('create offer');
         // User create search request
         const request = requestFactory();
         const userSearchRequest = await baseUser.searchManager.createRequest(request);
@@ -161,24 +182,20 @@ describe('Data sharing test between user, service provider and business', async 
             const tokenPointerKey: string = TokenPointer.generateKey(accBusiness.publicKey, accService.publicKey);
             const data: Map<string, string> = await baseUser.profileManager.getData();
             data.has(tokenPointerKey).should.be.equal(true);
-            console.log(data.get(tokenPointerKey));
+            console.log('user share tokenpointer to service provider');
         });
         let businessPromise;
         let servicePromise;
         setTimeout(
             async () => {
                 // Get all granted but not yet accepted offer
-                console.log();
                 const offerShareDatas: Array<OfferShareData> = await offerShareDataRepoBusiness.getShareData(accBusiness.publicKey, false);
-                console.log('business get not yet accepted share data');
-                console.log(offerShareDatas);
                 offerShareDatas.length.should.be.equal(1);
                 const offerShareData: OfferShareData = offerShareDatas[0];
                 const dataFields: Map<string, string> = await baseBusiness.profileManager.getAuthorizedData(offerShareData.clientId, offerShareData.clientResponse);
-                console.log('business get granted fields');
-                console.log(dataFields);
+                console.log('business get not yet accepted share data');
                 businessPromise = shareDataRepoBusiness.acceptShareData(dataFields, offerShareData.clientId, accBusiness.publicKey, offerShareData.offerSearchId, offerShareData.worth).then((data) => {
-                    // Include the eth_wallets entry
+                    // Exclude the eth_wallets entry
                     data.size.should.be.equal(2);
                     data.get('gpa').should.be.equal('4.0');
                     console.log('received data');
@@ -199,13 +216,13 @@ describe('Data sharing test between user, service provider and business', async 
                 const value: string = data.get(tokenPointerKey);
                 const tokenPointer: TokenPointer = JSON.parse(value);
                 tokenPointer.token.bid.should.be.equal(accBusiness.publicKey);
+                console.log('service get tokenpointer from user');
                 servicePromise = shareDataRepoService.shareWithBusiness(tokenPointerKey, value, accUser.publicKey).then(async (status) => {
                     // Check the SharePointer is written into the storage
                     status.should.be.equal(true);
                     const sharePointerKey: string = SharePointer.generateKey(accUser.publicKey, accBusiness.publicKey);
                     const data: Map<string, string> = await baseService.profileManager.getData();
                     data.has(sharePointerKey).should.be.equal(true);
-                    console.log(data.get(sharePointerKey));
                 });
             },
             60000);

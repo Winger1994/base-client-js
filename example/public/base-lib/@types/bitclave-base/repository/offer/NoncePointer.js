@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var NoncePointer = /** @class */ (function () {
-    function NoncePointer(nonce) {
+    function NoncePointer(nonce, transactionKey) {
         this.nonce = nonce;
+        this.transactionKey = transactionKey;
     }
     NoncePointer.generateKey = function (uid, spid) {
         return uid + NoncePointer.SEP + spid;

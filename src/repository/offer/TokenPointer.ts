@@ -40,16 +40,18 @@ class Token {
     public nonce: number;
     public dataHash: string;
     public timestamp: string;
+    public transactionKey: string;
 
-    constructor(bid: string, nonce: number, dataHash: string, timestamp: string) {
+    constructor(bid: string, nonce: number, dataHash: string, timestamp: string, transactionKey: string) {
         this.bid = bid;
         this.nonce = nonce;
         this.dataHash = dataHash;
         this.timestamp = timestamp;
+        this.transactionKey = transactionKey;
     }
 
     public static conform(obj: Token): boolean {
-        if (obj.bid !== undefined && obj.nonce !== undefined && obj.dataHash !== undefined && obj.timestamp !== undefined) {
+        if (obj.bid !== undefined && obj.nonce !== undefined && obj.dataHash !== undefined && obj.timestamp !== undefined && obj.transactionKey !== undefined) {
             return true;
         }
         return false;

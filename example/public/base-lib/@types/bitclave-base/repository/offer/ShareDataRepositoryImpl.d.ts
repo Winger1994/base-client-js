@@ -7,9 +7,14 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
     private dataRequestManager;
     private profileManager;
     private offerShareDataRepository;
+    private contract;
+    private eth_wallets;
     private static min;
     private static max;
-    constructor(dataRequestManager: DataRequestManager, profileManager: ProfileManager, offerShareDataRepository: OfferShareDataRepository);
+    private static gwei;
+    private userShare;
+    private spShare;
+    constructor(dataRequestManager: DataRequestManager, profileManager: ProfileManager, offerShareDataRepository: OfferShareDataRepository, web3: any, contractAddress: string, eth_wallets: string);
     grantAccessForOffer(offerSearchId: number, offerOwner: string, acceptedFields: Map<string, AccessRight>, priceId: number, clientId: string): Promise<boolean>;
     acceptShareData(data: Map<string, string>, uid: string, bid: string, searchId: number, worth: string): Promise<Map<string, string>>;
     shareWithBusiness(key: string, value: string, uid: string): Promise<boolean>;

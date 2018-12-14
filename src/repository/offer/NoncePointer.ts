@@ -2,9 +2,11 @@ export default class NoncePointer {
     public static SEP: string = '_';
 
     public nonce: number;
+    public transactionKey: string;
 
-    constructor(nonce: number) {
+    constructor(nonce: number, transactionKey: string) {
         this.nonce = nonce;
+        this.transactionKey = transactionKey;
     }
 
     public static generateKey(uid: string, spid: string): string {

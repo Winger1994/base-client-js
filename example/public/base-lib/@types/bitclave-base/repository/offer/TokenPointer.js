@@ -31,14 +31,15 @@ var TokenPointer = /** @class */ (function () {
 }());
 exports.TokenPointer = TokenPointer;
 var Token = /** @class */ (function () {
-    function Token(bid, nonce, dataHash, timestamp) {
+    function Token(bid, nonce, dataHash, timestamp, transactionKey) {
         this.bid = bid;
         this.nonce = nonce;
         this.dataHash = dataHash;
         this.timestamp = timestamp;
+        this.transactionKey = transactionKey;
     }
     Token.conform = function (obj) {
-        if (obj.bid !== undefined && obj.nonce !== undefined && obj.dataHash !== undefined && obj.timestamp !== undefined) {
+        if (obj.bid !== undefined && obj.nonce !== undefined && obj.dataHash !== undefined && obj.timestamp !== undefined && obj.transactionKey !== undefined) {
             return true;
         }
         return false;
