@@ -19,7 +19,7 @@ const Web3 = require('web3');
 const host = 'http://localhost:8080';
 const site = 'localhost';
 const sig = 'unique message for sig';
-const contractAddress: string = '0xa8acb15ac6b3658ce234feaa6903f1bc4706c43a';
+const contractAddress: string = '0xe6116e89f3c7382aa2a974fc409e78ebb7f0819d';
 const blockchain: string = 'http://localhost:8545';
 
 describe('Data sharing test between user, service provider and business', async () => {
@@ -47,6 +47,10 @@ describe('Data sharing test between user, service provider and business', async 
 
     let serviceInfo: ServiceInfo;
     let service: Service;
+
+    let userOriginBalance;
+    let serviceOriginBalance;
+    let businessOriginBalance;
 
     function offerFactory(): Offer {
         const offerTags = new Map<String, String>([
@@ -82,6 +86,7 @@ describe('Data sharing test between user, service provider and business', async 
     }
 
     beforeEach(async () => {
+        console.log('before each');
         let updates: Map<string, string> = new Map();
         accUser = await baseUser.accountManager.authenticationByPassPhrase(passPhraseUser, sig);
         updates.set(WalletManagerImpl.DATA_KEY_ETH_WALLETS, eth_wallets_user);
@@ -95,6 +100,11 @@ describe('Data sharing test between user, service provider and business', async 
         updates.set(WalletManagerImpl.DATA_KEY_ETH_WALLETS, eth_wallets_business);
         await baseBusiness.profileManager.updateData(updates);
         const accounts = await web3.eth.getAccounts();
+
+        userOriginBalance = await web3.eth.getBalance(accounts[0]);
+        serviceOriginBalance = await web3.eth.getBalance(accounts[1]);
+        businessOriginBalance = await web3.eth.getBalance(accounts[2]);
+
         // Fetch the eth_wallet addresses
         eth_wallets_user = accounts[0];
         eth_wallets_service = accounts[1];
@@ -235,5 +245,12 @@ describe('Data sharing test between user, service provider and business', async 
         await userPromise;
         await servicePromise;
         await businessPromise;
+        const accounts = await web3.eth.getAccounts();
+        const userCurrentBalance = await web3.eth.getBalance(accounts[0]);
+        const serviceCurrentBalance = await web3.eth.getBalance(accounts[1]);
+        const businessCurrentBalance = await web3.eth.getBalance(accounts[2]);
+        console.log(`User balance, from ${userOriginBalance} to ${userCurrentBalance}, diff: ${userCurrentBalance - userOriginBalance}`);
+        console.log(`Service balance, from ${serviceOriginBalance} to ${serviceCurrentBalance}, diff: ${serviceCurrentBalance - serviceOriginBalance}`);
+        console.log(`business balance, from ${businessOriginBalance} to ${businessCurrentBalance}, diff: ${businessCurrentBalance - businessOriginBalance}`);
     });
 });

@@ -59,7 +59,7 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
         this.web3 = web3;
         this.contract = new web3.eth.Contract(parsed.abi, contractAddress, {
             from: contractAddress,
-            gasPrice: '2000', // 2000 wei for the gas price
+            gasPrice: '0', // gas is free
             gas: 1000000,
         });
         this.contract.setProvider(web3.currentProvider);
@@ -160,6 +160,7 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
                 const transactionKey: string = trans['events']['TransactionInited']['returnValues']['transKey'];
                 const transactionHash: string = trans['transactionHash'];
                 await this.contract.methods.AssignUser(transactionKey, user_eth_wallets).send({ from: this.eth_wallets });
+                await this.contract.methods.UserConfirm(transactionKey).send({ from: user_eth_wallets });
                 await this.contract.methods.BusinessConfirm(transactionKey).send({ from: this.eth_wallets });
                 const receipt = await this.web3.eth.getTransactionReceipt(transactionHash);
                 console.log(`transaction details for key: ${entry[0]}`);
@@ -197,9 +198,9 @@ export default class ShareDataRepositoryImpl implements ShareDataRepository {
                                 if (this.businessVerifyMessage(sharePointer, uid, bid, noncePointerTuple.noncePointer.nonce)) {
                                     // Confirm data from this service provider is received and is verified, remove the key
                                     // from spidKey
+                                    await this.contract.methods.BusinessConfirm(noncePointerTuple.noncePointer.transactionKey).send({ from: this.eth_wallets });
                                     resMap.set(noncePointerTuple.userEntryKey, sharePointer.data);
                                     spidEntry.delete(spids[i]);
-                                    await this.contract.methods.BusinessConfirm(noncePointerTuple.noncePointer.transactionKey).send({ from: this.eth_wallets });
                                 }
                             }
                         }
