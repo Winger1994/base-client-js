@@ -19,6 +19,8 @@ const Web3 = require('web3');
 const host = 'http://localhost:8080';
 const site = 'localhost';
 const sig = 'unique message for sig';
+const contractAddress: string = '0xa8acb15ac6b3658ce234feaa6903f1bc4706c43a';
+const blockchain: string = 'http://localhost:8545';
 
 describe('Data sharing test between user, service provider and business', async () => {
     const passPhraseUser: string = 'data sharing user';
@@ -32,8 +34,7 @@ describe('Data sharing test between user, service provider and business', async 
     let eth_wallets_service: string;
     let eth_wallets_business: string;
     // TODO: two configurations
-    const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-    const contractAddress: string = '0xa8acb15ac6b3658ce234feaa6903f1bc4706c43a';
+    const web3 = new Web3(new Web3.providers.HttpProvider(blockchain));
 
     let accUser: Account;
     let accService: Account;
