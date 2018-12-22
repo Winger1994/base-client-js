@@ -86,7 +86,6 @@ describe('Data sharing test between user, service provider and business', async 
     }
 
     beforeEach(async () => {
-        console.log('before each');
         let updates: Map<string, string> = new Map();
         accUser = await baseUser.accountManager.authenticationByPassPhrase(passPhraseUser, sig);
         updates.set(WalletManagerImpl.DATA_KEY_ETH_WALLETS, eth_wallets_user);
